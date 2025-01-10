@@ -15,5 +15,6 @@
 // const imagePath = (name) => images(name, true)
 import ReactOnRails from 'react-on-rails';
 import FirstComponent from '../components/FirstComponent';
+import JoinRoom from '../components/JoinRoom';
 
-ReactOnRails.register({ FirstComponent });
+ReactOnRails.register({ FirstComponent, JoinRoom });

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_09_182437) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_10_120337) do
   create_table "instruments", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -46,7 +46,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_09_182437) do
   end
 
   create_table "slots", force: :cascade do |t|
-    t.integer "slot_type_id", null: false
+    t.integer "slot_type_id"
     t.boolean "is_occupied"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -94,6 +94,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_09_182437) do
   add_foreign_key "slot_type_instruments", "instruments"
   add_foreign_key "slot_type_instruments", "slot_types"
   add_foreign_key "slots", "rooms"
+  add_foreign_key "slots", "rooms", on_delete: :cascade
   add_foreign_key "slots", "slot_types"
   add_foreign_key "user_instruments", "instruments"
   add_foreign_key "user_instruments", "slots"

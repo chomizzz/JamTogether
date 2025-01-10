@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-const FirstComponent = (props) => {
-    const [name, setName] = useState(props.name);
+const JoinRoom = () => {
+
     return (
         <div>
-            page acceuil
+            do you join ?
         </div>
     );
 };
-FirstComponent.propTypes = {
+JoinRoom.propTypes = {
     name: PropTypes.string.isRequired, // this is passed from the Rails view
 };
-export default FirstComponent;
+export default JoinRoom;
 

@@ -7,12 +7,4 @@
   <div class="flex">Max joueur : <%= @room.maxPlayer %></div>
 </div>
 
-
-<!--<div class="flex">-->
-  <%#= react_component('SelectRole', { slotTypes: @slotTypes, instruments: @instruments }) %>
-  <%#= react_component('Test') %>
-<!--</div>-->
-
-<div class="flex">
-  <div id="react-root"></div>
-</div>
+<%= react_component("JoinRoom",props: @hello_world_props, prerender: false) %>
