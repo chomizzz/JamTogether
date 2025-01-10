@@ -15,12 +15,23 @@
     "@babel/core": "^7.26.0",
     "@babel/plugin-transform-runtime": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.3",
     "@babel/runtime": "^7.26.0",
     "@types/babel__core": "^7.20.5",
     "@types/webpack": "^5.28.5",
     "babel-loader": "^8.4.1",
+    "babel-plugin-macros": "^3.1.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "compression-webpack-plugin": "^9.2.0",
+    "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.0",
+    "mini-css-extract-plugin": "^2.9.2",
+    "prop-types": "^15.8.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-on-rails": "^14.0.4",
     "shakapacker": "8.0.0",
+    "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.11",
     "webpack": "^5.97.1",
     "webpack-assets-manifest": "^5.2.1",
@@ -28,6 +39,8 @@
     "webpack-merge": "^5.10.0"
   },
   "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
+    "react-refresh": "^0.16.0",
     "webpack-dev-server": "^4.15.2"
   }
 }

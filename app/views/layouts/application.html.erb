@@ -18,11 +18,15 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app %>
     <%= javascript_pack_tag "application" %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="bg-stone-700" >
+    <%= render 'layouts/navbar' %>
+    <main class="container mx-auto px-5 flex-col">
+      <%= yield %>
+    </main>
   </body>
 </html>

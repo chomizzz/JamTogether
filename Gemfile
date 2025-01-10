@@ -59,3 +59,9 @@ end
 gem "shakapacker", "= 8.0"
 
 gem "react_on_rails", "= 14.0.4"
+
+gem "tailwindcss-ruby", "= 4.0.0.beta.8"
+
+gem "tailwindcss-rails", "~> 3.1"
+
+gem 'devise'

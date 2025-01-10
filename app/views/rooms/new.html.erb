@@ -1,0 +1,33 @@
+<h1>Créer une nouvelle salle</h1>
+
+<%= form_with(model: @room, local: true) do |form| %>
+  <% if @room.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@room.errors.count, "erreur") %> empêchent la création de la salle :</h2>
+      <ul>
+        <% @room.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, "Nom de la salle" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :style, "Style" %>
+    <%= form.text_area :style %>
+  </div>
+
+  <div>
+    <%= form.label :maxPlayer, "Max player" %>
+    <%= form.number_field :maxPlayer %>
+  </div>
+
+  <div>
+    <%= form.submit "Créer la salle" %>
+  </div>
+<% end %>
