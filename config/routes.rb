@@ -1,19 +1,26 @@
 Rails.application.routes.draw do
   get "home/index"
   # Routes pour les utilisateurs via Devise
-  devise_for :users, controllers: { registrations: 'users/registrations' }
+  devise_for :users, controllers: { registrations: "users/registrations" }
 
   # Définition des routes pour Room (les salles)
   resources :roomsroute
 
   resources :rooms do
     member do
-      get 'join'
+      get "join"
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      get "join_room/by_slot_type", to: "join_room#by_slot_type"
+      resources :slots, only: [:create]
     end
   end
 
 
-  post 'join', to: 'rooms#join'
+  post "join", to: "rooms#join"
 
   # Autres routes de l'application
   get "up" => "rails/health#show", as: :rails_health_check

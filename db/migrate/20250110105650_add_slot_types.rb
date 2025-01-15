@@ -6,7 +6,7 @@ class AddSlotTypes < ActiveRecord::Migration[6.1]
                       { name: 'Drum', description: 'Select your preferred sound from the presets' },
                       { name: 'Bass', description: 'You create the bass' },
                       { name: 'Synth', description: 'You are in charge of the melody' },
-                      { name: 'Microphone', description: 'Use your microphone of instruments' }
+                      { name: 'Microphone', description: 'Use your microphone of join_room' }
                     ])
   end
 end

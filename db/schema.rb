@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_10_120337) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_15_180307) do
   create_table "instruments", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -26,6 +26,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_10_120337) do
     t.datetime "updated_at", null: false
     t.integer "user_admin_id", null: false
     t.integer "player_playing"
+    t.integer "current_player_number"
+    t.integer "current_spectator_number"
     t.index ["user_admin_id"], name: "index_rooms_on_user_admin_id"
   end
 
@@ -99,7 +101,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_10_120337) do
   add_foreign_key "user_instruments", "instruments"
   add_foreign_key "user_instruments", "slots"
   add_foreign_key "user_instruments", "users"
-  add_foreign_key "user_slots", "rooms"
+  add_foreign_key "user_slots", "rooms", on_delete: :cascade
   add_foreign_key "user_slots", "slots"
   add_foreign_key "user_slots", "users"
 end

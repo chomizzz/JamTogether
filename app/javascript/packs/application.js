@@ -16,5 +16,5 @@
 import ReactOnRails from 'react-on-rails';
 import FirstComponent from '../components/FirstComponent';
 import JoinRoom from '../components/JoinRoom';
-
-ReactOnRails.register({ FirstComponent, JoinRoom });
+import RoomIndex from '../components/RoomIndex';
+ReactOnRails.register({ FirstComponent, JoinRoom, RoomIndex });

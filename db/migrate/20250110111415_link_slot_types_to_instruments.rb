@@ -1,12 +1,12 @@
 class LinkSlotTypesToInstruments < ActiveRecord::Migration[6.0]
 def up
-    # Trouver les instruments par leur nom
+    # Trouver les join_room par leur nom
     drum_kit = Instrument.find_by(name: "DrumKit")
     bass = Instrument.find_by(name: "BassOscillator")
     synth = Instrument.find_by(name: "TripleOscillator")
     microphone = Instrument.find_by(name: "Microphone-Instrument")
 
-    # Associer les instruments aux SlotTypes via la table de jonction slot_type_instruments
+    # Associer les join_room aux SlotTypes via la table de jonction slot_type_instruments
     slot_types = SlotType.all
 
     slot_types.each do |slot_type|

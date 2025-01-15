@@ -29,19 +29,15 @@ class RoomsController < ApplicationController
   end
 
   def join
-    @room = Room.find(params[:id])
-    @user = current_user
+
+    room = Room.find(params[:id])
+    slot = room.create_spectator_slot
+    current_user.take_spectator_slot(slot, room)
+
+    @room = room
     @slotTypes = SlotType.all
-    @instruments = Instrument.all
-    @room.create_spectator_slot
 
-    @room.slots.each do |s|
-      if s.is_occupied == false
-        UserSlot.create(room: @room, user: current_user, slot: s)
-      end
-    end
-
-    render :show
+    render :join
   end
 
 

@@ -7,4 +7,14 @@ class User < ApplicationRecord
   validates :pseudo, presence: true, uniqueness: true, length: { minimum: 4, maximum: 20 }
   has_one :room, foreign_key: :user_admin_id
   has_one :user_slot
+
+
+  def take_spectator_slot(slot, room)
+    user_slot = UserSlot.create(user: self, slot: slot, room: room)
+
+    unless user_slot.persisted?
+      puts "Failed to create UserSlot: #{user_slot.errors.full_messages}"
+    end
+  end
+
 end
