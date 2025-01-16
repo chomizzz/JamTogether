@@ -7,6 +7,7 @@ class User < ApplicationRecord
   validates :pseudo, presence: true, uniqueness: true, length: { minimum: 4, maximum: 20 }
   has_one :room, foreign_key: :user_admin_id
   has_one :user_slot
+  has_one :user_instrument
 
 
   def take_spectator_slot(slot, room)
