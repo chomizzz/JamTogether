@@ -4,8 +4,10 @@ class Room < ApplicationRecord
   has_many :user_slots
 
   validates :name, presence: true
-  validates :maxPlayer, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3 }
+  validates :maxPlayer, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 4 }
   validates :style, presence: true
+
+
 
   MAX_DRUMS = 1
   MAX_BASS = 1
@@ -14,8 +16,6 @@ class Room < ApplicationRecord
   MAX_SPECTATORS = 15
 
   def create_playable_slots
-
-
     drum_slot_type = SlotType.find_by(name: "Drum")
     bass_slot_type = SlotType.find_by(name: "Bass")
     synth_slot_type = SlotType.find_by(name: "Synth")
@@ -40,6 +40,7 @@ class Room < ApplicationRecord
       false
     end
   end
+
 
 
 

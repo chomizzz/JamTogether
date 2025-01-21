@@ -1,5 +1,5 @@
 class RoomsController < ApplicationController
-  before_action :authenticate_user!, only: [:create]
+  before_action :authenticate_user!, only: [ :create ]
   def new
     @room = Room.new
   end
@@ -7,6 +7,8 @@ class RoomsController < ApplicationController
   def create
     @room = Room.new(rooms_params)
     @room.user_admin = current_user
+    @room.current_player_number = 1
+    @room.current_spectator_number = 0
 
     if @room.valid?
       if @room.save
@@ -28,20 +30,38 @@ class RoomsController < ApplicationController
     @user
   end
 
-  def join
+  def join_as_spectator
+    @room = Room.find(params[:id])
+    @slotTypes = SlotType.all
+    UserSlot.new(user_id: current_user, room_id: @room, slot_id: @room.create_spectator_slot).save
+    @room.increment!(:current_spectator_number, 1)
+    render :show
+  end
 
-    room = Room.find(params[:id])
-    slot = room.create_spectator_slot
-    current_user.take_spectator_slot(slot, room)
-    @room = room
+  def join
+    @room = Room.find(params[:id])
     @slotTypes = SlotType.all
 
     render :join
   end
 
 
+  def update
+    @room = Room.find(params[:id]) # Assurer que la room est récupérée
+
+    if @room.update(room_params)
+      # Diffusion de la mise à jour
+      ActionCable.server.broadcast "room_#{@room.id}", {
+        current_player_number: @room.current_player_number
+      }
+      redirect_to @room, notice: "La salle a été mise à jour."
+    else
+      render :edit
+    end
+  end
+
+
   def submit_join_form
-    puts("On est ici")
     room = Room.find(params[:roomId])
     slot_type_id = params[:slotTypeId]
     instrument_id = params[:instrumentId]
@@ -68,9 +88,17 @@ class RoomsController < ApplicationController
         # Créer une nouvelle instance de UserSlot avec la relation avec Slot, Room et User
         user_slot = UserSlot.new(user: current_user, slot: slot, room: room)
 
+        slot.is_occupied = true
+        room.increment!(:current_player_number, 1)
+        ActionCable.server.broadcast(
+          "room_#{room.id}",
+          current_player_number: room.current_player_number,
+          current_spectator_number: room.current_spectator_number
+        )
+
+
         # Sauvegarder les associations
         if user_instrument.save && user_slot.save
-          puts "UserInstrument et UserSlot ont été enregistrés avec succès"
           render json: { redirect_url: play_room_path(room) }, status: :ok
           break
         else

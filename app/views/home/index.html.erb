@@ -1,8 +1,42 @@
-<div>
+<table class="table-auto w-full border-separate border-4 border-slate-500">
+  <thead>
+  <tr>
+    <th id="ici" class="border border-slate-600 border-2">Leader</th>
+    <th class="border border-slate-600 border-2">Room Name</th>
+    <th class="border border-slate-600 border-2">Style</th>
+    <th class="border border-slate-600 border-2">Players</th>
+    <th class="border border-slate-600 border-2">Spectators</th>
+    <th class="border border-slate-600 border-2">Action</th>
+  </tr>
+  </thead>
+  <tbody class="text-center text-white">
   <% @rooms.each do |room| %>
-    <%= react_component("RoomIndex", props: { room: room, roomId: room.id, roomPath: room_path(room.id),
-                                              joinRoomPath: join_room_path(room.id),
-                                              userAdminPseudo: room.user_admin.pseudo}) %>
+    <tr key={room.id}>
+      <td class="border border-slate-600 border-2">
+        <%= room.user_admin.pseudo %>
+      </td>
+      <td class="border border-slate-600 border-2">
+        <%= room.name %>
+      </td>
+      <td class="border border-slate-600 border-2">
+        <%= room.style %>
+      </td>
+      <td class="border border-slate-600 border-2">
+        <%= room.current_player_number %> / <%= room.maxPlayer %>
+      </td>
+      <td class="border border-slate-600 border-2">
+        <%= room.current_spectator_number %> / 20
+      </td>
+      <td class="flex border border-slate-600 border-2 justify-around">
+        <div>
+          <%= link_to 'Spectate', join_as_spectator_room_path(room.id), class: "flex rounded my-1 px-2 py-0.5 bg-blue-300 text-black hover:bg-blue-50" %> <!-- Lien vers join_as_spectator_room -->
+        </div>
+        <div>
+          <%= link_to 'Join', join_room_path(room.id), class: "flex rounded my-1 px-2 py-0.5 bg-gray-700 text-black hover:bg-gray-500" %> <!-- Lien vers join_room -->
+        </div>
+        </div>
+      </td>
+    </tr>
   <% end %>
-</div>
-
+  </tbody>
+</table>

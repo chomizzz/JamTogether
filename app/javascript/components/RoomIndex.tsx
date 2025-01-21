@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
-const RoomIndex = ({ room, roomId, roomPath, joinRoomPath, userAdmin , userAdminPseudo}) => {
+const RoomIndex = ({ room, roomId, joinRoom, joinAsSpectatorRoomPath, userAdmin , userAdminPseudo}) => {
 
     return (
         <table className="table-auto w-full border-separate border-4 border-slate-500">
@@ -35,13 +35,13 @@ const RoomIndex = ({ room, roomId, roomPath, joinRoomPath, userAdmin , userAdmin
                 <td className="flex border border-slate-600 border-2 justify-around">
                     <div>
                         <div>
-                            <a href={roomPath}
+                            <a href={joinAsSpectatorRoomPath}
                                className="flex rounded my-1 px-2 py-0.5 bg-blue-300 text-black hover:bg-blue-50">
                                 Spectate
                             </a>
                         </div>
                         <div>
-                            <a href={joinRoomPath}
+                            <a href={joinRoom}
                                className="flex rounded my-1 px-2 py-0.5 bg-gray-700 text-black hover:bg-gray-500">
                                 Join
                             </a>

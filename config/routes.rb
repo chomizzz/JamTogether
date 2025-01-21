@@ -9,10 +9,13 @@ Rails.application.routes.draw do
   resources :rooms do
     member do
       get :join
+      get :join_as_spectator
       post :submit_join_form
       get :play
     end
   end
+
+
 
   namespace :api do
     namespace :v1 do
@@ -30,6 +33,7 @@ Rails.application.routes.draw do
       end
     end
   end
+
 
 
 

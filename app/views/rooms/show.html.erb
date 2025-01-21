@@ -1,10 +1,2 @@
-<div class="flex bg-gray-50 w-full justify-around rounded-b-lg drop-shadow-lg">
+<%= render 'rooms/infos_room' %>
 
-  <div class="flex">Nom de la salle : <%= @room.name %></div>
-
-  <div class="flex">Style : <%= @room.style %></div>
-
-  <div class="flex">Max joueur : <%= @room.maxPlayer %></div>
-</div>
-
-<%= react_component("JoinRoom",props: @hello_world_props, prerender: false) %>
