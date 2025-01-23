@@ -7,6 +7,7 @@ class Room < ApplicationRecord
   validates :maxPlayer, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 4 }
   validates :style, presence: true
 
+  after_update :broadcast_after_join
 
 
   MAX_DRUMS = 1
@@ -41,7 +42,16 @@ class Room < ApplicationRecord
     end
   end
 
+  def broadcast_after_join
+    broadcast_replace_to(
+      "rooms",
+      target: "rooms_#{self.id}",
+      partial: "rooms/room",
+      locals: { room: self }
+    )
+  end
 
-
-
+  def room_param
+    params.require(:room).permit(:current_player_number, current_spectator_number)
+  end
 end

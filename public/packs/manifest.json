@@ -1,19 +1,21 @@
 {
+  "actioncable.js": "/packs/js/actioncable.chunk.js",
   "application.js": "/packs/js/application.js",
   "entrypoints": {
     "application": {
       "assets": {
         "js": [
           "/packs/js/runtime.js",
-          "/packs/js/vendors-node_modules_pmmmwh_react-refresh-webpack-plugin_lib_runtime_RefreshUtils_js-node_mod-375a43.js",
+          "/packs/js/vendors-node_modules_hotwired_turbo-rails_app_javascript_turbo_index_js-node_modules_pmmmwh_r-4ccb98.js",
           "/packs/js/application.js"
         ]
       }
     }
   },
+  "js/actioncable.chunk.js.map": "/packs/js/actioncable.chunk.js.map",
   "js/application.js.map": "/packs/js/application.js.map",
   "js/runtime.js.map": "/packs/js/runtime.js.map",
-  "js/vendors-node_modules_pmmmwh_react-refresh-webpack-plugin_lib_runtime_RefreshUtils_js-node_mod-375a43.js": "/packs/js/vendors-node_modules_pmmmwh_react-refresh-webpack-plugin_lib_runtime_RefreshUtils_js-node_mod-375a43.js",
-  "js/vendors-node_modules_pmmmwh_react-refresh-webpack-plugin_lib_runtime_RefreshUtils_js-node_mod-375a43.js.map": "/packs/js/vendors-node_modules_pmmmwh_react-refresh-webpack-plugin_lib_runtime_RefreshUtils_js-node_mod-375a43.js.map",
+  "js/vendors-node_modules_hotwired_turbo-rails_app_javascript_turbo_index_js-node_modules_pmmmwh_r-4ccb98.js": "/packs/js/vendors-node_modules_hotwired_turbo-rails_app_javascript_turbo_index_js-node_modules_pmmmwh_r-4ccb98.js",
+  "js/vendors-node_modules_hotwired_turbo-rails_app_javascript_turbo_index_js-node_modules_pmmmwh_r-4ccb98.js.map": "/packs/js/vendors-node_modules_hotwired_turbo-rails_app_javascript_turbo_index_js-node_modules_pmmmwh_r-4ccb98.js.map",
   "runtime.js": "/packs/js/runtime.js"
 }

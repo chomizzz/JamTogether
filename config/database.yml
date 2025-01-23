@@ -13,10 +13,6 @@ development:
   primary:
     <<: *default
     database: storage/development.sqlite3
-  cache:
-    <<: *default
-    database: storage/development_cache.sqlite3
-    migrations_paths: db/cache_migrate
   cable:
     <<: *default
     database: storage/development_cable.sqlite3

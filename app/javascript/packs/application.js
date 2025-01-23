@@ -13,8 +13,8 @@
 //
 // const images = require.context('./images', true)
 // const imagePath = (name) => images(name, true)
+import "@hotwired/turbo-rails"
 import ReactOnRails from 'react-on-rails';
 import FirstComponent from '../components/FirstComponent';
 import JoinRoom from '../components/JoinRoom';
-import RoomIndex from '../components/RoomIndex';
-ReactOnRails.register({ FirstComponent, JoinRoom, RoomIndex });
+ReactOnRails.register({ FirstComponent, JoinRoom });

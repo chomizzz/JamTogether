@@ -1,5 +1,9 @@
 class RoomsController < ApplicationController
   before_action :authenticate_user!, only: [ :create ]
+  def index
+    @rooms = Room.includes(:user_admin).all
+  end
+
   def new
     @room = Room.new
   end
@@ -35,30 +39,44 @@ class RoomsController < ApplicationController
     @slotTypes = SlotType.all
     UserSlot.new(user_id: current_user, room_id: @room, slot_id: @room.create_spectator_slot).save
     @room.increment!(:current_spectator_number, 1)
-    render :show
+    @room.save
+
+    redirect_to @room
   end
+
+
 
   def join
+  @room = Room.find(params[:id])
+  @slotTypes = SlotType.all
+
+  redirect_to select_role_room_path(@room)
+end
+
+  def play
+    @room = Room.find_by(id: params[:id])
+    render :play
+  end
+
+  def select_role
     @room = Room.find(params[:id])
     @slotTypes = SlotType.all
-
-    render :join
+    render :select_role
   end
 
-
-  def update
-    @room = Room.find(params[:id]) # Assurer que la room est récupérée
-
-    if @room.update(room_params)
-      # Diffusion de la mise à jour
-      ActionCable.server.broadcast "room_#{@room.id}", {
-        current_player_number: @room.current_player_number
-      }
-      redirect_to @room, notice: "La salle a été mise à jour."
-    else
-      render :edit
-    end
-  end
+  # def update
+  #   @room = Room.find(params[:id]) # Assurer que la room est récupérée
+  #
+  #   if @room.update(room_params)
+  #     # Diffusion de la mise à jour
+  #     ActionCable.server.broadcast "room_#{@room.id}", {
+  #       current_player_number: @room.current_player_number
+  #     }
+  #     redirect_to @room, notice: "La salle a été mise à jour."
+  #   else
+  #     render :edit
+  #   end
+  # end
 
 
   def submit_join_form
@@ -108,11 +126,6 @@ class RoomsController < ApplicationController
     end
   end
 
-
-  def play
-    @room = Room.find_by(id: params[:id])
-    render :play
-  end
 
   private
 

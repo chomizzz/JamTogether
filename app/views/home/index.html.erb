@@ -40,3 +40,29 @@
   <% end %>
   </tbody>
 </table>
+
+
+<h1 class="mb-6 text-slate-700 font-bold text-2xl">Rooms turbo solidcable</h1>
+<div class="flex mt-10 bg-purple-700 space-y-4 mb-8">
+  <table id="rooms" class="table-auto w-full border border-collapse border-slate-500">
+    <thead>
+    <tr>
+      <th class="border border-slate-600 border-2">Admin</th>
+      <th class="border border-slate-600 border-2">Room Name</th>
+      <th class="border border-slate-600 border-2">Style</th>
+      <th class="border border-slate-600 border-2">Players</th>
+      <th class="border border-slate-600 border-2">Spectators</th>
+      <th class="border border-slate-600 border-2">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <%= turbo_stream_from "rooms" %>
+    <div id="rooms">
+      <%= render @rooms %>
+    </div>
+    </tbody>
+  </table>
+</div>
+
+
+

@@ -1,17 +1,22 @@
 Rails.application.routes.draw do
-  get "home/index"
+  get "chats/index"
+  get "chats/create"
+  get "room/index"
   # Routes pour les utilisateurs via Devise
   devise_for :users, controllers: { registrations: "users/registrations" }
 
   # Définition des routes pour Room (les salles)
-  resources :roomsroute
+  resources :rooms
+  resources :chats
 
   resources :rooms do
     member do
-      get :join
-      get :join_as_spectator
+      post :join
+      post :join_as_spectator
       post :submit_join_form
       get :play
+      get :show
+      get :select_role
     end
   end
 
@@ -26,6 +31,8 @@ Rails.application.routes.draw do
 
   # config/routes.rb
   Rails.application.routes.draw do
+  get "chats/index"
+  get "chats/create"
     resources :rooms, only: [:show] do
       member do
         get 'join'  # Pour la fonction de récupération des informations de la salle
@@ -43,5 +50,5 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Route racine (optionnelle)
-  root "home#index"
+  root "rooms#index"
 end
