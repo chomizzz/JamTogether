@@ -13,23 +13,31 @@ const JoinRoom = ({ slotTypes, room }) => {
     const [isModalOpen, setIsModalOpen] = useState(true); // Gérer l'état d'ouverture de la modale
     const [errorMessage, setErrorMessage] = useState(''); // Gérer les erreurs
     const [successMessage, setSuccessMessage] = useState(''); // Gérer les succès
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     // Fonction pour récupérer les join_room via l'API
-    const fetchInstruments = (slotTypeId) => {
-        fetch(`/api/v1/join_room/by_slot_type?slot_type_id=${slotTypeId}`)
-            .then((response) => response.json())
-            .then((data) => setAvailableInstruments(data))
-            .catch((error) => console.error('Error fetching join_room:', error));
+    const fetchInstruments = async (slotTypeId) => {
+        try {
+            const response = await fetch(`/api/v1/join_room/by_slot_type?slot_type_id=${slotTypeId}`);
+            const data = await response.json();
+            setAvailableInstruments(data);
+        } catch (error) {
+            console.error('Error fetching join_room:', error);
+            setAvailableInstruments([]);
+        }
     };
 
     // Effet pour charger les join_room quand le SlotTypeId change
     useEffect(() => {
-        if (formData.slotTypeId) {
+        if (isClient && formData.slotTypeId) {
             fetchInstruments(formData.slotTypeId);
-        } else {
-            setAvailableInstruments([]);
         }
-    }, [formData.slotTypeId]);
+    }, [formData.slotTypeId, isClient]);
+
 
     // Handler pour les changements dans les champs du formulaire
     const handleChange = (event) => {

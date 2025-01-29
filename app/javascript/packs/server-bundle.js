@@ -1,9 +1,10 @@
 import ReactOnRails from 'react-on-rails';
-
-import HelloWorld from '../bundles/HelloWorld/components/HelloWorldServer';
 import FirstComponent from "../components/FirstComponent";
+import JoinRoom from "../components/JoinRoom";
 
-// This is how react_on_rails can see the HelloWorld in the browser.
+// Export nécessaire pour le server-side rendering
+export default { FirstComponent, JoinRoom };
+
 ReactOnRails.register({
-  FirstComponent,
+  FirstComponent, JoinRoom
 });

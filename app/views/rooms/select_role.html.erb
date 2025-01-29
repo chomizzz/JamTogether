@@ -1,5 +1,3 @@
 <%= render 'rooms/infos_room' %>
 
-
-<%= react_component("JoinRoom",props: { slotTypes: @slotTypes, room: @room}) %>
-
+<%= react_component("JoinRoom", props: { slotTypes: @slotTypes, room: @room }, prerender: true) %>

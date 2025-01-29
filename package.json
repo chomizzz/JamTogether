@@ -8,6 +8,10 @@
       "./node_modules/shakapacker/package/babel/preset.js"
     ]
   },
+  "scripts": {
+  "build:client": "webpack --config webpack.client.config.js",
+  "build:server": "webpack --config webpack.server.config.js"
+  },
   "browserslist": [
     "defaults"
   ],

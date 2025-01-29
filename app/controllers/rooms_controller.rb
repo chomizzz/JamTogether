@@ -11,7 +11,7 @@ class RoomsController < ApplicationController
   def create
     @room = Room.new(rooms_params)
     @room.user_admin = current_user
-    @room.current_player_number = 1
+    @room.current_player_number = 0
     @room.current_spectator_number = 0
 
     if @room.valid?
@@ -36,22 +36,31 @@ class RoomsController < ApplicationController
 
   def join_as_spectator
     @room = Room.find(params[:id])
-    @slotTypes = SlotType.all
-    UserSlot.new(user_id: current_user, room_id: @room, slot_id: @room.create_spectator_slot).save
-    @room.increment!(:current_spectator_number, 1)
-    @room.save
 
-    redirect_to @room
+    if @room.current_spectator_number >= Room::MAX_SPECTATORS
+      flash.now[:alert] = "Room is full!"
+      redirect_to :index
+    else
+      UserSlot.new(user_id: current_user, room_id: @room, slot_id: @room.create_spectator_slot).save
+      @room.increment!(:current_spectator_number, 1)
+      @room.save
+      redirect_to @room
+    end
+
   end
 
 
 
   def join
-  @room = Room.find(params[:id])
-  @slotTypes = SlotType.all
-
-  redirect_to select_role_room_path(@room)
-end
+    @room = Room.find(params[:id])
+    @slotTypes = SlotType.all
+    if @room.current_player_number >= @room.maxPlayer
+      flash.now[:alert] = "Room is full!"
+      redirect_to :index
+    else
+      redirect_to select_role_room_path(@room)
+    end
+  end
 
   def play
     @room = Room.find_by(id: params[:id])
@@ -61,7 +70,6 @@ end
   def select_role
     @room = Room.find(params[:id])
     @slotTypes = SlotType.all
-    render :select_role
   end
 
   # def update

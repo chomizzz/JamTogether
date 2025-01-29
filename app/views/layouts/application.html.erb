@@ -26,6 +26,11 @@
   <body class="bg-stone-700" >
     <%= render 'layouts/navbar' %>
     <main class="container mx-auto px-5 flex-col">
+      <% flash.each do |key, value| %>
+        <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %>">
+          <%= value %>
+        </div>
+      <% end %>
       <%= yield %>
     </main>
   </body>
