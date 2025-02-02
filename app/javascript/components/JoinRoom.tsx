@@ -22,7 +22,7 @@ const JoinRoom = ({ slotTypes, room }) => {
     // Fonction pour récupérer les join_room via l'API
     const fetchInstruments = async (slotTypeId) => {
         try {
-            const response = await fetch(`/api/v1/join_room/by_slot_type?slot_type_id=${slotTypeId}`);
+            const response = await fetch(`/api/v1/join_room/fetch_instruments/${slotTypeId}`);
             const data = await response.json();
             setAvailableInstruments(data);
         } catch (error) {
@@ -86,19 +86,21 @@ const JoinRoom = ({ slotTypes, room }) => {
             });
     };
 
+    // @ts-ignore
     return (
-        <div>
+        <div className={""}>
             <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
                 <form onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor="slotType">Slot Type:</label>
+                    <div className={"text-white"}>
+                        <label htmlFor="slotType" className={"label"}>Slot Type:</label>
                         <select
                             id="slotType"
                             name="slotTypeId"
                             value={formData.slotTypeId}
                             onChange={handleChange}
+                            className={"w-full p-2 border border-slate-600 rounded"}
                         >
-                            <option value="">Select Slot Type</option>
+                            <option >Select Slot Type</option>
                             {slotTypes.map((slot) => (
                                 <option key={slot.id} value={slot.id}>
                                     {slot.name}
@@ -107,13 +109,14 @@ const JoinRoom = ({ slotTypes, room }) => {
                         </select>
                     </div>
 
-                    <div>
-                        <label htmlFor="instrument">Instrument:</label>
+                    <div className={"text-white"}>
+                        <label htmlFor="instrument" className={"label"}>Instrument:</label>
                         <select
                             id="instrument"
                             name="instrumentId"
                             value={formData.instrumentId}
                             onChange={handleChange}
+                            className={"w-full p-2 border border-slate-600 rounded"}
                         >
                             <option value="">Select Instrument</option>
                             {availableInstruments.map((instrument) => (
@@ -123,12 +126,19 @@ const JoinRoom = ({ slotTypes, room }) => {
                             ))}
                         </select>
                     </div>
-
-                    <button type="submit">Play</button>
+                    <div className={"flex justify-center p-4"}>
+                        <button type="submit" className={"primary-button"} >Play</button>
+                    </div>
+                    <div className={"flex justify-center"}>
+                        <button onClick={() => window.history.back()}
+                                className="cancel-button">
+                            Annuler
+                        </button>
+                    </div>
                 </form>
 
                 {/* Afficher les messages de succès ou d'erreur */}
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                {errorMessage && <p className="flex justify-center error-message">{errorMessage}</p>}
                 {successMessage && <p className="success-message">{successMessage}</p>}
             </Modal>
         </div>

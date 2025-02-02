@@ -17,9 +17,9 @@ class RoomsController < ApplicationController
     if @room.valid?
       if @room.save
         @room.create_playable_slots
-        redirect_to join_room_path(@room), notice: "La salle a été créée avec succès."
+        redirect_to join_room_path(@room, turbo: false), notice: "La salle a été créée avec succès."
       else
-        render :new
+        flash.now[:alert] = @room.errors.full_messages.to_sentence
       end
     else
       flash.now[:alert] = @room.errors.full_messages.join(", ")
@@ -50,7 +50,6 @@ class RoomsController < ApplicationController
   end
 
 
-
   def join
     @room = Room.find(params[:id])
     @slotTypes = SlotType.all
@@ -58,7 +57,7 @@ class RoomsController < ApplicationController
       flash.now[:alert] = "Room is full!"
       redirect_to :index
     else
-      redirect_to select_role_room_path(@room)
+      render :select_role, turbo: false
     end
   end
 
@@ -71,6 +70,8 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:id])
     @slotTypes = SlotType.all
   end
+
+
 
   # def update
   #   @room = Room.find(params[:id]) # Assurer que la room est récupérée
@@ -116,19 +117,12 @@ class RoomsController < ApplicationController
 
         slot.is_occupied = true
         room.increment!(:current_player_number, 1)
-        ActionCable.server.broadcast(
-          "room_#{room.id}",
-          current_player_number: room.current_player_number,
-          current_spectator_number: room.current_spectator_number
-        )
 
-
-        # Sauvegarder les associations
         if user_instrument.save && user_slot.save
           render json: { redirect_url: play_room_path(room) }, status: :ok
           break
         else
-          render "Erreur de sauvegarde : #{user_instrument.errors.full_messages} - #{user_slot.errors.full_messages}"
+          render "Erreur de sauvegarde : #{user_instrument.errors.full_messages} - #{user_slot.errors.full_messages}".to_json
         end
       end
     end

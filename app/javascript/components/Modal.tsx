@@ -5,11 +5,10 @@ const Modal = ({ isOpen, closeModal, children }) => {
 
     return (
         <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-            onClick={closeModal}
+            className="fixed inset-0 bg-stone-700 bg-opacity-50 flex justify-center items-center z-50"
         >
             <div
-                className="bg-white rounded-lg p-6 shadow-lg w-1/3 h-1/3"
+                className="bg-neutral-900 rounded-lg p-6 shadow-lg"
                 onClick={(e) => e.stopPropagation()}
             >
                 {children}

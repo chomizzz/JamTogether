@@ -9,7 +9,7 @@
       <%= button_to 'Spectate', join_as_spectator_room_path(room.id), method: :post, class: "flex cursor-pointer rounded my-1 px-2 py-0.5 bg-blue-300 text-black hover:bg-blue-100" %>
     </div>
     <div>
-      <%= button_to 'Join', join_room_path(room.id), method: :post, class: "flex cursor-pointer rounded my-1 px-2 py-0.5 bg-purple-900 text-white hover:bg-purple-500"%>
-    </div>
+    <%= button_to 'Join', join_room_path(room.id), method: :post, class: "flex cursor-pointer rounded my-1 px-2 py-0.5 bg-purple-900 text-white hover:bg-purple-500", data: { turbo: false } %>
+  </div>
   </td>
 </tr>

@@ -17,5 +17,7 @@ import "@hotwired/turbo-rails"
 import ReactOnRails from 'react-on-rails';
 import FirstComponent from '../components/FirstComponent';
 import JoinRoom from '../components/JoinRoom';
+import "./remove_error";
 
-ReactOnRails.register({ FirstComponent, JoinRoom });
+ReactOnRails.register({FirstComponent, JoinRoom});
+

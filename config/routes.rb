@@ -24,8 +24,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      get "join_room/by_slot_type", to: "join_room#by_slot_type"
-      resources :slots, only: [ :create ]
+      get "join_room/fetch_instruments/:slot_type_id", to: "join_room#fetch_instruments"
     end
   end
 
@@ -35,8 +34,8 @@ Rails.application.routes.draw do
   get "chats/create"
     resources :rooms, only: [:show] do
       member do
-        get 'join'  # Pour la fonction de récupération des informations de la salle
-        post 'submit_join_form'  # Pour soumettre le formulaire
+        get "join"  # Pour la fonction de récupération des informations de la salle
+        post "submit_join_form"  # Pour soumettre le formulaire
       end
     end
   end

@@ -16,5 +16,11 @@ class Api::V1::JoinRoomController < ApplicationController
     else
       render json: instruments
     end
-  end
+    end
+
+    def fetch_instruments
+      slot_type = SlotType.find(params[:slot_type_id])
+      @instruments = slot_type.slot_type_instruments.map(&:instrument)
+      render json: @instruments
+    end
 end
