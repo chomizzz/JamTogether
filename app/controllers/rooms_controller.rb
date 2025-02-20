@@ -19,10 +19,10 @@ class RoomsController < ApplicationController
         @room.create_playable_slots
         redirect_to join_room_path(@room, turbo: false), notice: "La salle a été créée avec succès."
       else
-        flash.now[:alert] = @room.errors.full_messages.to_sentence
+        flash[:alert] = @room.errors.full_messages.to_sentence
       end
     else
-      flash.now[:alert] = @room.errors.full_messages.join(", ")
+      flash[:alert] = @room.errors.full_messages.join(", ")
       render :new
     end
   end
@@ -38,8 +38,8 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:id])
 
     if @room.current_spectator_number >= Room::MAX_SPECTATORS
-      flash.now[:alert] = "Room is full!"
-      redirect_to :index
+      flash[:alert] = "Room is full!"
+      redirect_to rooms_path
     else
       UserSlot.new(user_id: current_user, room_id: @room, slot_id: @room.create_spectator_slot).save
       @room.increment!(:current_spectator_number, 1)
@@ -54,8 +54,8 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:id])
     @slotTypes = SlotType.all
     if @room.current_player_number >= @room.maxPlayer
-      flash.now[:alert] = "Room is full!"
-      redirect_to :index
+      flash[:alert] = "Room is full!"
+      redirect_to rooms_path
     else
       render :select_role, turbo: false
     end
@@ -63,6 +63,10 @@ class RoomsController < ApplicationController
 
   def play
     @room = Room.find_by(id: params[:id])
+    @user_slot = current_user.user_slot
+    @user_instrument = current_user.user_instrument.instrument
+    authorize @room
+
     render :play
   end
 
@@ -113,6 +117,7 @@ class RoomsController < ApplicationController
         user_instrument = UserInstrument.new(user: current_user, slot: slot, instrument: instrument)
 
         # Créer une nouvelle instance de UserSlot avec la relation avec Slot, Room et User
+        current_user.user_slot&.delete
         user_slot = UserSlot.new(user: current_user, slot: slot, room: room)
 
         slot.is_occupied = true

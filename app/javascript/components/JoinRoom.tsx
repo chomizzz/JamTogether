@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
-import Modal from './Modal'; // Importer le composant Modal
+import Modal from './Modal';
 
 const JoinRoom = ({ slotTypes, room }) => {
     const [formData, setFormData] = useState({

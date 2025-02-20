@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   # Routes pour les utilisateurs via Devise
   devise_for :users, controllers: { registrations: "users/registrations" }
 
+  post "presence/disconnected", to: "presence#disconnected"
+
   # Définition des routes pour Room (les salles)
   resources :rooms
   resources :chats

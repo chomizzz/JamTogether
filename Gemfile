@@ -67,3 +67,5 @@ gem "tailwindcss-rails", "~> 3.1"
 gem 'devise'
 
 gem 'turbo-rails'
+
+gem 'pundit'

@@ -27,7 +27,7 @@
   <%= render 'layouts/navbar' %>
   <main class="flex flex-col justify-center items-center container mx-auto px-5">
     <% flash.each do |key, value| %>
-      <div class="relative top-20 right-10 mt-2 z-40 <%= key == 'notice' ? 'success' : 'danger' %>" role="alert" id="fade-out">
+      <div class="relative top-15 right-1/2 mt-2 z-40 <%= key == 'notice' ? 'success' : 'danger' %>" role="alert" id="fade-out">
         <span class="block sm:inline"><%= value %></span>
           <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
             <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title></svg>

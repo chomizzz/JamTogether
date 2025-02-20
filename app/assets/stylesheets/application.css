@@ -16,11 +16,14 @@
 
 #fade-out {
     position: fixed;
-    animation: fadeOut 3s forwards;
+    animation: fadeOut 2s forwards;
 }
 
 @keyframes fadeOut {
     0% {
+        opacity: 1;
+    }
+    75% {
         opacity: 1;
     }
     100% {
