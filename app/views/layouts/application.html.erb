@@ -23,9 +23,11 @@
     <%= javascript_pack_tag "application" %>
   </head>
 
-  <body class="bg-stone-700 flex flex-col ">
-  <%= render 'layouts/navbar' %>
-  <main class="flex flex-col justify-center items-center container mx-auto px-5">
+  <body class="bg-stone-700 flex-row">
+   
+      <%= render 'layouts/navbar' %>
+   
+  <main class="container mx-auto px-5">
     <% flash.each do |key, value| %>
       <div class="relative top-15 right-1/2 mt-2 z-40 <%= key == 'notice' ? 'success' : 'danger' %>" role="alert" id="fade-out">
         <span class="block sm:inline"><%= value %></span>

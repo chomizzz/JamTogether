@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_23_113326) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_25_094803) do
   create_table "chats", force: :cascade do |t|
     t.string "message"
     t.datetime "created_at", null: false
@@ -35,6 +35,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_23_113326) do
     t.integer "current_spectator_number"
     t.integer "player_id"
     t.index ["user_admin_id"], name: "index_rooms_on_user_admin_id"
+  end
+
+  create_table "sheets", force: :cascade do |t|
+    t.string "note"
+    t.integer "velocity"
+    t.string "time"
+    t.integer "user_instrument_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_instrument_id"], name: "index_sheets_on_user_instrument_id"
   end
 
   create_table "slot_type_instruments", force: :cascade do |t|
@@ -99,6 +109,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_23_113326) do
   end
 
   add_foreign_key "rooms", "users", column: "user_admin_id"
+  add_foreign_key "sheets", "user_instruments"
   add_foreign_key "slot_type_instruments", "instruments"
   add_foreign_key "slot_type_instruments", "slot_types"
   add_foreign_key "slots", "rooms"

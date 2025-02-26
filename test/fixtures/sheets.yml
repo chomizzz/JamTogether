@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  note: MyString
+  velocity: 1
+  time: MyString
+  user_instrument: one
+
+two:
+  note: MyString
+  velocity: 1
+  time: MyString
+  user_instrument: two
