@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 const Sheet = ({
 	localKey,
-	setLocalKey,
+	addLocalKey,
 	keyNote,
 	selectedResolution,
 	handlePlayNote,
@@ -10,7 +10,7 @@ const Sheet = ({
 	const handleNoteClick = (e, note, mesureIndex) => {
 		const keyPosition = e.target.getAttribute('data-note');
 		if (!localKey.includes(keyPosition)) {
-			setLocalKey((prevLocalKey) => [...prevLocalKey, keyPosition]);
+			addLocalKey((prevLocalKey) => [...prevLocalKey, keyPosition]);
 			document.getElementById(keyPosition)?.classList.add("bg-red-500");
 			handlePlayNote(note);
 		}
@@ -22,7 +22,7 @@ const Sheet = ({
 		const keyPosition = e.target.getAttribute('data-note');
 		if (localKey.includes(keyPosition)) {
 			const updatedLocalKey = localKey.filter(item => item !== keyPosition);
-			setLocalKey(updatedLocalKey);
+			addLocalKey(updatedLocalKey);
 			document.getElementById(keyPosition)?.classList.remove("bg-red-500");
 		}
 

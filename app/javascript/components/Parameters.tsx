@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/solid';
-const Parameters = ({ onResolutionChange }) => {
+
+const Parameters = ({ onResolutionChange, MAXRESOLUTION }) => {
+
 	const [selectedResolution, setSelectedResolution] = useState("");
 
-	const options = [
-		{ value: "8", label: "1/8" },
-		{ value: "16", label: "1/16" },
-		{ value: "32", label: "1/32" }
-	];
+	const option = (MAXRESOLUTION) => {
+		const options = [];
+		for (let i = MAXRESOLUTION; i >= 2; i /= 2) {
+			options.push({ value: i, label: `1/${i}` });
+		}
+		return options
+	}
+
+
+	const options = option(MAXRESOLUTION);
+
+
 
 	const handleChange = (event) => {
 		const resolution = event.target.value;
@@ -15,7 +24,7 @@ const Parameters = ({ onResolutionChange }) => {
 		onResolutionChange(resolution);
 	};
 	return (
-		<div className="w-full flex-raw flex bg-slate-400">
+		<div className="w-full flex bg-slate-400">
 			<AdjustmentsHorizontalIcon className="flex h-5 w-5" />
 			<select value={selectedResolution} onChange={handleChange}>
 				{options.map((option) => (
