@@ -10,7 +10,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
     const getNoteWidth = (noteDuration, resolution) => {
         return noteDuration / resolution;
     };
-
+    const [localKey, setLocalKey] = useState([]);
 
 
     useEffect(() => {
@@ -23,18 +23,36 @@ const Play = ({ room, userSlot, userInstrument }) => {
 
     const handlePlayNote = (note) => {
         synth.triggerAttackRelease(note, "8n");
+        console.log(localKey);
     };
 
     const handleResolutionChange = (resolution) => {
         setSelectedResolution(Number(resolution));
     };
 
+    const sequencer = () => {
+
+    };
+
+    const startAndStopSequencer = () => {
+
+    };
+
     return (
         <div className="flex-col">
-            <Parameters onResolutionChange={handleResolutionChange} />
+            <Parameters
+                onResolutionChange={handleResolutionChange}
+                startAndStopSequencer={startAndStopSequencer}
+            />
             <div className="flex-row flex">
                 <PianoRoll handlePlayNote={handlePlayNote} keyNote={keyNote} />
-                <Sheet keyNote={keyNote} selectedResolution={selectedResolution} handlePlayNote={handlePlayNote} />
+                <Sheet
+                    localKey={localKey}
+                    setLocalKey={setLocalKey}
+                    keyNote={keyNote}
+                    selectedResolution={selectedResolution}
+                    handlePlayNote={handlePlayNote}
+                />
             </div>
 
         </div>
