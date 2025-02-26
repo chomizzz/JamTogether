@@ -12,6 +12,9 @@ const Play = ({ room, userSlot, userInstrument }) => {
     };
     const [localKey, setLocalKey] = useState([]);
 
+    const addLocalKey = (value) => {
+
+    }
 
     useEffect(() => {
         Tone.start();
