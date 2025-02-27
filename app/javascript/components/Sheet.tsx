@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 const Sheet = ({
 	localKey,
 	addLocalKey,
+	removeLocalKey,
 	keyNote,
 	selectedResolution,
 	handlePlayNote,
@@ -10,7 +11,7 @@ const Sheet = ({
 	const handleNoteClick = (e, note, mesureIndex) => {
 		const keyPosition = e.target.getAttribute('data-note');
 		if (!localKey.includes(keyPosition)) {
-			addLocalKey((prevLocalKey) => [...prevLocalKey, keyPosition]);
+			addLocalKey(keyPosition);
 			document.getElementById(keyPosition)?.classList.add("bg-red-500");
 			handlePlayNote(note);
 		}
@@ -21,8 +22,7 @@ const Sheet = ({
 	const handleDeleteNote = (e, note, mesureIndex) => {
 		const keyPosition = e.target.getAttribute('data-note');
 		if (localKey.includes(keyPosition)) {
-			const updatedLocalKey = localKey.filter(item => item !== keyPosition);
-			addLocalKey(updatedLocalKey);
+			removeLocalKey(keyPosition);
 			document.getElementById(keyPosition)?.classList.remove("bg-red-500");
 		}
 
@@ -31,7 +31,6 @@ const Sheet = ({
 	const setDataNote = (positionIndex, mesureIndex, note) => {
 		const relativePosition = parseInt(positionIndex, 10).toString(2).padStart(5, '0');
 		return `${mesureIndex}-${relativePosition}-${note}`;
-
 	}
 	const mapPositionTo32Grid = (positionIndex, selectedResolution) => {
 		// Calcule l'index équivalent dans la grille de 32

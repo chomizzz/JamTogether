@@ -13,11 +13,40 @@ const Play = ({ room, userSlot, userInstrument }) => {
     const getNoteWidth = (noteDuration, resolution) => {
         return noteDuration / resolution;
     };
-    const [localKey, setLocalKey] = useState(new Array(128).fill(null));
+    const [localKey, setLocalKey] = useState(new Array(128));
+
 
     const addLocalKey = (value) => {
-        console.log(value);
-        setLocalKey(value);
+        //setLocalKey((prevLocalKey) => [...prevLocalKey, value]);
+        const test = value.split("-");
+        const index = parseInt(test[1], 2);
+        setLocalKey((prevLocalKey) => {
+            const newArray = [...prevLocalKey];
+            switch (parseInt(test[0], 10)) {
+                case 0:
+                    // Insérer la note à l'index calculé (test[2] représente la note)
+                    newArray[index] = test[2];
+                    break;
+                case 1:
+                    newArray[31 + index] = test[2];  // Insérer à un index décalé
+                    break;
+                case 2:
+                    newArray[63 + index] = test[2];  // Insérer à un autre index décalé
+                    break;
+                case 3:
+                    newArray[95 + index] = test[2];  // Insérer à un autre index décalé
+                    break;
+                default:
+                    break;
+            }
+            console.log(newArray);
+            return newArray; // Retourner le tableau mis à jour
+        });
+    }
+
+    const removeLocalKey = (value) => {
+        const updatedLocalKey = localKey.filter(item => item !== value);
+        setLocalKey(updatedLocalKey);
     }
 
     useEffect(() => {
@@ -56,6 +85,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
                 <Sheet
                     localKey={localKey}
                     addLocalKey={addLocalKey}
+                    removeLocalKey={removeLocalKey}
                     keyNote={keyNote}
                     selectedResolution={selectedResolution}
                     handlePlayNote={handlePlayNote}
