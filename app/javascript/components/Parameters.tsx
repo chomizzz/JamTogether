@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/solid';
+import { AdjustmentsHorizontalIcon, PlayIcon, PauseIcon } from '@heroicons/react/24/solid';
+import { start } from 'tone';
 
-const Parameters = ({ onResolutionChange, MAXRESOLUTION }) => {
+const Parameters = ({
+	onResolutionChange,
+	MAXRESOLUTION,
+	startAndStopSequencer,
+	sequencerActive,
+}) => {
 
 	const [selectedResolution, setSelectedResolution] = useState("");
 
@@ -33,7 +39,14 @@ const Parameters = ({ onResolutionChange, MAXRESOLUTION }) => {
 					</option>
 				))}
 			</select>
-		</div>
+			<button onClick={() => startAndStopSequencer()}>
+				{sequencerActive ? (
+					<PlayIcon className="flex h-5 w-5" />
+				) : (
+					<PauseIcon className="flex h-5 w-5" />
+				)}
+			</button>
+		</div >
 	)
 
 }

@@ -4,13 +4,14 @@ const Sheet = ({
 	localKey,
 	addLocalKey,
 	removeLocalKey,
+	keyExists,
 	keyNote,
 	selectedResolution,
 	handlePlayNote,
 }) => {
 	const handleNoteClick = (e, note, mesureIndex) => {
 		const keyPosition = e.target.getAttribute('data-note');
-		if (!localKey.includes(keyPosition)) {
+		if (!keyExists(keyPosition)) {
 			addLocalKey(keyPosition);
 			document.getElementById(keyPosition)?.classList.add("bg-red-500");
 			handlePlayNote(note);
@@ -21,7 +22,7 @@ const Sheet = ({
 
 	const handleDeleteNote = (e, note, mesureIndex) => {
 		const keyPosition = e.target.getAttribute('data-note');
-		if (localKey.includes(keyPosition)) {
+		if (keyExists(keyPosition)) {
 			removeLocalKey(keyPosition);
 			document.getElementById(keyPosition)?.classList.remove("bg-red-500");
 		}

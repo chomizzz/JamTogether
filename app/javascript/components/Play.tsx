@@ -13,40 +13,113 @@ const Play = ({ room, userSlot, userInstrument }) => {
     const getNoteWidth = (noteDuration, resolution) => {
         return noteDuration / resolution;
     };
-    const [localKey, setLocalKey] = useState(new Array(128));
+    const [localKey, setLocalKey] = useState(new Array(128).fill(null));
+    const [valueInserted, setValueInserted] = useState(false); // État pour savoir si une valeur a été insérée
+    const [sequencerActive, setSequencerActive] = useState(false);
+    let BPM = 60;
+    let index = 0;
+    let intervalId
+
+
+    const keyExists = (dataNote) => {
+        let valueSplit = dataNote.split("-");
+        let index = parseInt(valueSplit[1], 2);
+
+        if (localKey[index] === null) {
+            console.log(false);
+            return false;
+        } else if (Array.isArray(localKey[index])) {
+            for (let i = 0; i < localKey[index].length; i++) {
+                if (localKey[index][i] === valueSplit[2]) {
+                    console.log(true);
+                    return true;
+                }
+            }
+            console.log(false);
+            return false;
+        } else {
+            if (localKey[index] === valueSplit[2]) {
+                console.log(true);
+                return true;
+            } else {
+                console.log(false);
+                return false;
+            }
+        }
+    }
 
 
     const addLocalKey = (value) => {
-        //setLocalKey((prevLocalKey) => [...prevLocalKey, value]);
-        const test = value.split("-");
-        const index = parseInt(test[1], 2);
+        let valueSplit = value.split("-");
+        let index = parseInt(valueSplit[1], 2);
+
+
         setLocalKey((prevLocalKey) => {
             const newArray = [...prevLocalKey];
-            switch (parseInt(test[0], 10)) {
+            let valueWasInserted = false;
+
+            console.log(newArray[index]);
+            console.log(valueSplit[2]);
+
+            switch (parseInt(valueSplit[0], 10)) {
                 case 0:
-                    // Insérer la note à l'index calculé (test[2] représente la note)
-                    newArray[index] = test[2];
+                    if (newArray[index] !== valueSplit[2]) {
+                        if (Array.isArray(newArray[index])) {
+                            newArray[index].push(valueSplit[2]);
+                        } else if (newArray[index] !== null) {
+                            newArray[index] = [newArray[index], valueSplit[2]];
+                        } else {
+                            // Si l'index est null, on remplace par la seule valeur
+                            newArray[index] = [valueSplit[2]];
+                        }
+                    }
                     break;
                 case 1:
-                    newArray[31 + index] = test[2];  // Insérer à un index décalé
+                    if (newArray[31 + index] !== valueSplit[2]) {
+                        if (Array.isArray(newArray[31 + index])) {
+                            newArray[31 + index].push(valueSplit[2]);
+                        } else {
+                            newArray[31 + index] = [newArray[31 + index], valueSplit[2]];
+                        }
+                    }
                     break;
                 case 2:
-                    newArray[63 + index] = test[2];  // Insérer à un autre index décalé
+                    if (newArray[63 + index] !== valueSplit[2]) {
+                        if (Array.isArray(newArray[63 + index])) {
+                            newArray[63 + index].push(valueSplit[2]);
+                        } else {
+                            newArray[63 + index] = [newArray[63 + index], valueSplit[2]];
+                        }
+                    }
                     break;
                 case 3:
-                    newArray[95 + index] = test[2];  // Insérer à un autre index décalé
+                    if (newArray[95 + index] !== valueSplit[2]) {
+                        if (Array.isArray(newArray[95 + index])) {
+                            newArray[95 + index].push(valueSplit[2]);
+                        } else {
+                            newArray[95 + index] = [newArray[95 + index], valueSplit[2]];
+                        }
+                    }
                     break;
                 default:
                     break;
             }
-            console.log(newArray);
-            return newArray; // Retourner le tableau mis à jour
+            return newArray;
         });
+        console.log(localKey);
     }
 
     const removeLocalKey = (value) => {
-        const updatedLocalKey = localKey.filter(item => item !== value);
-        setLocalKey(updatedLocalKey);
+        const valueSplit = value.split("-");
+        const index = parseInt(valueSplit[1], 2);
+        if (localKey[index] !== null) {
+            const updateLocalKey = [...localKey]
+            updateLocalKey[index] = null;
+            setLocalKey(updateLocalKey);
+            return true;
+        } else {
+            return false
+        }
     }
 
     useEffect(() => {
@@ -65,12 +138,29 @@ const Play = ({ room, userSlot, userInstrument }) => {
         setSelectedResolution(Number(resolution));
     };
 
-    const sequencer = () => {
-
+    const sequencer = (playOrStop) => {
+        if (playOrStop) {
+            intervalId = setInterval(readHash, 300); // 300 ms pour chaque pulsation
+            console.log("Séquenceur démarré");
+        } else {
+            if (intervalId) {
+                clearInterval(intervalId);
+                console.log("Séquenceur arrêté");
+            }
+        }
     };
 
+
+    function readHash() {
+        handlePlayNote(localKey[index]); // Joue la note correspondante
+        index++;
+        if (index >= localKey.length) {
+            index = 0; // Si on arrive à la fin du tableau, on recommence depuis le début
+        }
+    }
     const startAndStopSequencer = () => {
-        return 1;
+        setSequencerActive(!sequencerActive);
+        sequencer(sequencerActive);
     };
 
     return (
@@ -79,6 +169,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
                 onResolutionChange={handleResolutionChange}
                 MAXRESOLUTION={MAXRESOLUTION}
                 startAndStopSequencer={startAndStopSequencer}
+                sequencerActive={sequencerActive}
             />
             <div className="flex-row flex">
                 <PianoRoll handlePlayNote={handlePlayNote} keyNote={keyNote} />
@@ -86,6 +177,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
                     localKey={localKey}
                     addLocalKey={addLocalKey}
                     removeLocalKey={removeLocalKey}
+                    keyExists={keyExists}
                     keyNote={keyNote}
                     selectedResolution={selectedResolution}
                     handlePlayNote={handlePlayNote}
