@@ -69,7 +69,6 @@ const Play = ({ room, userSlot, userInstrument }) => {
                         } else if (newArray[index] !== null) {
                             newArray[index] = [newArray[index], valueSplit[2]];
                         } else {
-                            // Si l'index est null, on remplace par la seule valeur
                             newArray[index] = [valueSplit[2]];
                         }
                     }
@@ -140,7 +139,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
 
     const sequencer = (playOrStop) => {
         if (playOrStop) {
-            intervalId = setInterval(readHash, 300); // 300 ms pour chaque pulsation
+            intervalId = setInterval(readHash, 150); // 300 ms pour chaque pulsation
             console.log("Séquenceur démarré");
         } else {
             if (intervalId) {
@@ -152,7 +151,15 @@ const Play = ({ room, userSlot, userInstrument }) => {
 
 
     function readHash() {
-        handlePlayNote(localKey[index]); // Joue la note correspondante
+        if (Array.isArray(localKey[index]) && localKey[index] !== null) {
+            localKey[index].forEach(item => {
+                if (item != null) {
+                    console.log(item);
+                    handlePlayNote(item);
+                }
+            });
+        }
+
         index++;
         if (index >= localKey.length) {
             index = 0; // Si on arrive à la fin du tableau, on recommence depuis le début

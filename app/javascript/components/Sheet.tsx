@@ -30,12 +30,13 @@ const Sheet = ({
 	}
 
 	const setDataNote = (positionIndex, mesureIndex, note) => {
+		//TODO IL FAUT RESEIMPLIFIER AUCUNE UTILITÉ DE FAIRE UN BINAIRE ON VA UTILISER ICI LE MESURE INDEX ET POSITION INDEX POUR FAIRE LES NOTES JUSQU'À 128
 		const relativePosition = parseInt(positionIndex, 10).toString(2).padStart(5, '0');
+		const test = parseInt(positionIndex, 10);
+		console.log(test);
 		return `${mesureIndex}-${relativePosition}-${note}`;
 	}
 	const mapPositionTo32Grid = (positionIndex, selectedResolution) => {
-		// Calcule l'index équivalent dans la grille de 32
-		// Ex: pour selectedResolution=8, multiplier par 4 (32/8) pour correspondre
 		const factor = 32 / selectedResolution;
 		return Math.floor(positionIndex * factor);
 	}
