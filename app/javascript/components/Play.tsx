@@ -23,14 +23,15 @@ const Play = ({ room, userSlot, userInstrument }) => {
 
     const keyExists = (dataNote) => {
         let valueSplit = dataNote.split("-");
-        let index = parseInt(valueSplit[1], 2);
+        let index = valueSplit[0];
+        let note = valueSplit[1];
 
         if (localKey[index] === null) {
             console.log(false);
             return false;
         } else if (Array.isArray(localKey[index])) {
             for (let i = 0; i < localKey[index].length; i++) {
-                if (localKey[index][i] === valueSplit[2]) {
+                if (localKey[index][i] === note) {
                     console.log(true);
                     return true;
                 }
@@ -38,7 +39,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
             console.log(false);
             return false;
         } else {
-            if (localKey[index] === valueSplit[2]) {
+            if (localKey[index] === note) {
                 console.log(true);
                 return true;
             } else {
@@ -51,66 +52,33 @@ const Play = ({ room, userSlot, userInstrument }) => {
 
     const addLocalKey = (value) => {
         let valueSplit = value.split("-");
-        let index = parseInt(valueSplit[1], 2);
+        let index = valueSplit[0];
+        let note = valueSplit[1];
 
 
         setLocalKey((prevLocalKey) => {
             const newArray = [...prevLocalKey];
             let valueWasInserted = false;
 
-            console.log(newArray[index]);
-            console.log(valueSplit[2]);
-
-            switch (parseInt(valueSplit[0], 10)) {
-                case 0:
-                    if (newArray[index] !== valueSplit[2]) {
-                        if (Array.isArray(newArray[index])) {
-                            newArray[index].push(valueSplit[2]);
-                        } else if (newArray[index] !== null) {
-                            newArray[index] = [newArray[index], valueSplit[2]];
-                        } else {
-                            newArray[index] = [valueSplit[2]];
-                        }
-                    }
-                    break;
-                case 1:
-                    if (newArray[31 + index] !== valueSplit[2]) {
-                        if (Array.isArray(newArray[31 + index])) {
-                            newArray[31 + index].push(valueSplit[2]);
-                        } else {
-                            newArray[31 + index] = [newArray[31 + index], valueSplit[2]];
-                        }
-                    }
-                    break;
-                case 2:
-                    if (newArray[63 + index] !== valueSplit[2]) {
-                        if (Array.isArray(newArray[63 + index])) {
-                            newArray[63 + index].push(valueSplit[2]);
-                        } else {
-                            newArray[63 + index] = [newArray[63 + index], valueSplit[2]];
-                        }
-                    }
-                    break;
-                case 3:
-                    if (newArray[95 + index] !== valueSplit[2]) {
-                        if (Array.isArray(newArray[95 + index])) {
-                            newArray[95 + index].push(valueSplit[2]);
-                        } else {
-                            newArray[95 + index] = [newArray[95 + index], valueSplit[2]];
-                        }
-                    }
-                    break;
-                default:
-                    break;
+            if (newArray[index] === null) {
+                newArray[index] = [note];
+                valueWasInserted = true;
+            } else if (Array.isArray(newArray[index])) {
+                newArray[index].push(note);
+                valueWasInserted = true;
+            } else {
+                valueWasInserted = false;
             }
+
             return newArray;
         });
         console.log(localKey);
     }
 
     const removeLocalKey = (value) => {
-        const valueSplit = value.split("-");
-        const index = parseInt(valueSplit[1], 2);
+        let valueSplit = value.split("-");
+        let index = valueSplit[0];
+
         if (localKey[index] !== null) {
             const updateLocalKey = [...localKey]
             updateLocalKey[index] = null;
@@ -173,7 +141,8 @@ const Play = ({ room, userSlot, userInstrument }) => {
     return (
         <div className="flex-col">
             <Parameters
-                onResolutionChange={handleResolutionChange}
+                setSelectedResolution={setSelectedResolution}
+                selectedResolution={selectedResolution}
                 MAXRESOLUTION={MAXRESOLUTION}
                 startAndStopSequencer={startAndStopSequencer}
                 sequencerActive={sequencerActive}

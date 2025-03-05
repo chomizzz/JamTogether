@@ -3,13 +3,13 @@ import { AdjustmentsHorizontalIcon, PlayIcon, PauseIcon } from '@heroicons/react
 import { start } from 'tone';
 
 const Parameters = ({
-	onResolutionChange,
+	setSelectedResolution,
+	selectedResolution,
 	MAXRESOLUTION,
 	startAndStopSequencer,
 	sequencerActive,
 }) => {
 
-	const [selectedResolution, setSelectedResolution] = useState("");
 
 	const option = (MAXRESOLUTION) => {
 		const options = [];
@@ -27,7 +27,6 @@ const Parameters = ({
 	const handleChange = (event) => {
 		const resolution = event.target.value;
 		setSelectedResolution(resolution);
-		onResolutionChange(resolution);
 	};
 	return (
 		<div className="w-full flex bg-slate-400">
