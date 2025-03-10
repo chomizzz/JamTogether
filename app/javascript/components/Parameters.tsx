@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AdjustmentsHorizontalIcon, PlayIcon, PauseIcon } from '@heroicons/react/24/solid';
+import { AdjustmentsHorizontalIcon, PlayIcon, PauseIcon, MusicalNoteIcon } from '@heroicons/react/24/solid';
 import { start } from 'tone';
 
 const Parameters = ({
@@ -8,6 +8,8 @@ const Parameters = ({
 	MAXRESOLUTION,
 	startAndStopSequencer,
 	sequencerActive,
+	setBpm,
+	bpm,
 }) => {
 
 
@@ -18,7 +20,10 @@ const Parameters = ({
 		}
 		return options
 	}
-
+	const handleBpm = (event) => {
+		const newBpm = Number(event.target.value);
+		setBpm(newBpm);  // Mise à jour du BPM
+	};
 
 	const options = option(MAXRESOLUTION);
 
@@ -38,8 +43,15 @@ const Parameters = ({
 					</option>
 				))}
 			</select>
+			<p>|</p>
+			<MusicalNoteIcon className="flex h-5 w-5" />
+			<input type="number" value={bpm} onChange={handleBpm}
+				min="30"
+				max="250"
+				step="1" />
+			<p>|</p>
 			<button onClick={() => startAndStopSequencer()}>
-				{sequencerActive ? (
+				{!sequencerActive ? (
 					<PlayIcon className="flex h-5 w-5" />
 				) : (
 					<PauseIcon className="flex h-5 w-5" />

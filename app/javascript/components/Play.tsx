@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import * as Tone from 'tone';
 import Parameters from './Parameters';
 import PianoRoll from './PianoRoll';
@@ -7,7 +7,7 @@ import Sheet from './Sheet';
 const MAXRESOLUTION = 32;
 
 const Play = ({ room, userSlot, userInstrument }) => {
-    const synth = new Tone.Synth().toDestination();
+    const synth = new Tone.PolySynth().toDestination();
     const [selectedResolution, setSelectedResolution] = useState(8);
     const keyNote = ["C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4", "C5"];
     const getNoteWidth = (noteDuration, resolution) => {
@@ -16,9 +16,12 @@ const Play = ({ room, userSlot, userInstrument }) => {
     const [localKey, setLocalKey] = useState(new Array(128).fill(null));
     const [valueInserted, setValueInserted] = useState(false); // État pour savoir si une valeur a été insérée
     const [sequencerActive, setSequencerActive] = useState(false);
-    let BPM = 60;
-    let index = 0;
-    let intervalId
+    const [bpm, setBpm] = useState(100);
+    useEffect(() => {
+        Tone.getTransport().bpm.value = bpm;
+    }, [bpm]);
+    const [sequencer, setSequencer] = useState(null);
+
 
 
     const keyExists = (dataNote) => {
@@ -93,7 +96,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
         Tone.start();
 
         return () => {
-            Tone.Transport.stop();
+            Tone.getTransport().stop();
         };
     }, []);
 
@@ -105,39 +108,46 @@ const Play = ({ room, userSlot, userInstrument }) => {
         setSelectedResolution(Number(resolution));
     };
 
-    const sequencer = (playOrStop) => {
-        if (playOrStop) {
-            intervalId = setInterval(readHash, 150); // 300 ms pour chaque pulsation
-            console.log("Séquenceur démarré");
-        } else {
-            if (intervalId) {
-                clearInterval(intervalId);
-                console.log("Séquenceur arrêté");
-            }
-        }
-    };
+    const timeAnimation = (step) => {
 
-
-    function readHash() {
-        if (Array.isArray(localKey[index]) && localKey[index] !== null) {
-            localKey[index].forEach(item => {
-                if (item != null) {
-                    console.log(item);
-                    handlePlayNote(item);
-                }
-            });
-        }
-
-        index++;
-        if (index >= localKey.length) {
-            index = 0; // Si on arrive à la fin du tableau, on recommence depuis le début
-        }
     }
-    const startAndStopSequencer = () => {
-        setSequencerActive(!sequencerActive);
-        sequencer(sequencerActive);
-    };
 
+
+    const startAndStopSequencer = () => {
+        // Inverse l'état
+        const newState = !sequencerActive;
+
+        if (newState) {
+            // Démarrer le séquenceur
+            console.log("Séquenceur démarré");
+            Tone.start().then(() => {
+                const seq = new Tone.Sequence((time, step) => {
+                    if (Array.isArray(localKey[step]) && localKey[step] !== null) {
+                        localKey[step].forEach(item => {
+
+                            if (item != null) {
+                                synth.triggerAttackRelease(item, "16n", time);
+                            }
+                        });
+                    }
+                }, [...Array(localKey.length).keys()], "16n");
+
+                // Stocker la référence dans une variable d'état
+                setSequencer(seq);
+
+                seq.start(0);
+                Tone.getTransport().start();
+            });
+        } else {
+            // Arrêter le séquenceur
+            Tone.getTransport().stop();
+            sequencer?.stop();
+            console.log("Séquenceur arrêté");
+        }
+
+        // Mettre à jour l'état après avoir effectué l'action
+        setSequencerActive(newState);
+    };
     return (
         <div className="flex-col">
             <Parameters
@@ -146,6 +156,8 @@ const Play = ({ room, userSlot, userInstrument }) => {
                 MAXRESOLUTION={MAXRESOLUTION}
                 startAndStopSequencer={startAndStopSequencer}
                 sequencerActive={sequencerActive}
+                setBpm={setBpm}
+                bpm={bpm}
             />
             <div className="flex-row flex">
                 <PianoRoll handlePlayNote={handlePlayNote} keyNote={keyNote} />

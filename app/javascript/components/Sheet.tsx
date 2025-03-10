@@ -47,7 +47,7 @@ const Sheet = ({
 			{keyNote.map((note, noteIndex) => (
 				<div className="flex flex-row h-3 w-full">
 					{Array.from({ length: 4 }).map((_, mesureIndex) => (
-						<div key={`measure-${note}-${mesureIndex}`} className="flex relative bg-gray-400 border-r-2 border-y border-black w-1/4">
+						<div key={`measure-${note}-${mesureIndex}`} className="flex relative bg-gray-400 border-r-4 border-y border-black w-1/4">
 							<div className="absolute top-0 left-0 right-0 flex">
 								{Array.from({ length: 32 }).map((_, positionIndex) => (
 									<div
