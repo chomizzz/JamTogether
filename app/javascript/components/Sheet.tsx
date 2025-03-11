@@ -9,10 +9,14 @@ const Sheet = ({
 	selectedResolution,
 	handlePlayNote,
 }) => {
-	const handleNoteClick = (e, note, mesureIndex) => {
+
+
+	function handleNoteClick(e, note, mesureIndex, duration) {
+
 		const keyPosition = e.target.getAttribute('data-note');
+		let time = duration + "n";
 		if (!keyExists(keyPosition)) {
-			addLocalKey(keyPosition);
+			addLocalKey(keyPosition, time);
 			document.getElementById(keyPosition)?.classList.add("bg-red-500");
 			handlePlayNote(note);
 		}
@@ -20,7 +24,7 @@ const Sheet = ({
 
 	}
 
-	const handleDeleteNote = (e, note, mesureIndex) => {
+	function handleDeleteNote(e, note, mesureIndex) {
 		const keyPosition = e.target.getAttribute('data-note');
 		if (keyExists(keyPosition)) {
 			removeLocalKey(keyPosition);
@@ -29,14 +33,10 @@ const Sheet = ({
 
 	}
 
-	const setDataNote = (positionIndex, mesureIndex, note) => {
-		//TODO IL FAUT RESEIMPLIFIER AUCUNE UTILITÉ DE FAIRE UN BINAIRE ON VA UTILISER ICI LE MESURE INDEX ET POSITION INDEX POUR FAIRE LES NOTES JUSQU'À 128
+	function setDataNote(positionIndex, mesureIndex, note) {
 		return mesureIndex * 32 + positionIndex + `-` + note;
-		//const relativePosition = parseInt(positionIndex, 10).toString(2).padStart(5, '0');
-		//const test = parseInt(positionIndex, 10);
-		//return `${mesureIndex}-${relativePosition}-${note}`;
 	}
-	const mapPositionTo32Grid = (positionIndex, selectedResolution) => {
+	function mapPositionTo32Grid(positionIndex, selectedResolution) {
 		const factor = 32 / selectedResolution;
 		return Math.floor(positionIndex * factor);
 	}
@@ -62,7 +62,7 @@ const Sheet = ({
 									return (<div
 										data-note={setDataNote(mappedIndex, mesureIndex, note)}
 										className={`flex-1 h-3  hover:bg-purple-700 hover:opacity-20 z-10`}
-										onClick={(e) => handleNoteClick(e, note, mesureIndex)}
+										onClick={(e) => handleNoteClick(e, note, mesureIndex, selectedResolution)}
 										onDoubleClick={(e) => handleDeleteNote(e, note, mesureIndex)}>
 									</div>)
 

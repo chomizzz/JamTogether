@@ -24,7 +24,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
 
 
 
-    const keyExists = (dataNote) => {
+    function keyExists(dataNote) {
         let valueSplit = dataNote.split("-");
         let index = valueSplit[0];
         let note = valueSplit[1];
@@ -34,7 +34,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
             return false;
         } else if (Array.isArray(localKey[index])) {
             for (let i = 0; i < localKey[index].length; i++) {
-                if (localKey[index][i] === note) {
+                if (localKey[index][i].split("-")[0] === note) {
                     console.log(true);
                     return true;
                 }
@@ -42,7 +42,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
             console.log(false);
             return false;
         } else {
-            if (localKey[index] === note) {
+            if (localKey[index].split("-")[0] === note) {
                 console.log(true);
                 return true;
             } else {
@@ -53,7 +53,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
     }
 
 
-    const addLocalKey = (value) => {
+    function addLocalKey(value, time) {
         let valueSplit = value.split("-");
         let index = valueSplit[0];
         let note = valueSplit[1];
@@ -64,10 +64,10 @@ const Play = ({ room, userSlot, userInstrument }) => {
             let valueWasInserted = false;
 
             if (newArray[index] === null) {
-                newArray[index] = [note];
+                newArray[index] = [note + "-" + time];
                 valueWasInserted = true;
             } else if (Array.isArray(newArray[index])) {
-                newArray[index].push(note);
+                newArray[index].push(note + "-" + time);
                 valueWasInserted = true;
             } else {
                 valueWasInserted = false;
@@ -78,7 +78,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
         console.log(localKey);
     }
 
-    const removeLocalKey = (value) => {
+    function removeLocalKey(value) {
         let valueSplit = value.split("-");
         let index = valueSplit[0];
 
@@ -91,7 +91,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
             return false
         }
     }
-
+    // permet de monter tone puis de le démonter au moment de quitter la page
     useEffect(() => {
         Tone.start();
 
@@ -100,20 +100,11 @@ const Play = ({ room, userSlot, userInstrument }) => {
         };
     }, []);
 
-    const handlePlayNote = (note) => {
-        synth.triggerAttackRelease(note, "8n");
+    function handlePlayNote(note) {
+        synth.triggerAttackRelease(note, "16n");
     };
 
-    const handleResolutionChange = (resolution) => {
-        setSelectedResolution(Number(resolution));
-    };
-
-    const timeAnimation = (step) => {
-
-    }
-
-
-    const startAndStopSequencer = () => {
+    function startAndStopSequencer() {
         // Inverse l'état
         const newState = !sequencerActive;
 
@@ -124,9 +115,9 @@ const Play = ({ room, userSlot, userInstrument }) => {
                 const seq = new Tone.Sequence((time, step) => {
                     if (Array.isArray(localKey[step]) && localKey[step] !== null) {
                         localKey[step].forEach(item => {
-
                             if (item != null) {
-                                synth.triggerAttackRelease(item, "16n", time);
+                                let noteTime = item.split("-");
+                                synth.triggerAttackRelease(noteTime[0], noteTime[1], time);
                             }
                         });
                     }
