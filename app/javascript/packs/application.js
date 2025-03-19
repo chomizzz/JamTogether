@@ -21,8 +21,10 @@ import Play from '../components/Play';
 import Parameters from '../components/Parameters';
 import PianoRoll from '../components/PianoRoll';
 import Sheet from "../components/Sheet";
+import Draggable from "../components/Draggable";
+import Droppable from "../components/Droppable";
 import "./remove_error";
 
 
-ReactOnRails.register({ FirstComponent, JoinRoom, Play, Parameters, PianoRoll, Sheet });
+ReactOnRails.register({ FirstComponent, JoinRoom, Play, Parameters, PianoRoll, Sheet, Draggable, Droppable });
 
