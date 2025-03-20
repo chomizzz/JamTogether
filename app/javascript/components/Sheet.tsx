@@ -13,15 +13,19 @@ const Sheet = ({
 	handlePlayNote,
 }) => {
 
+	const [activeDraggables, setActiveDraggables] = useState({});
 
 	function handleNoteClick(e, note, mesureIndex, duration) {
 
-		const keyPosition = e.target.getAttribute('data-note');
+		const keyPosition = e.currentTarget.getAttribute('data-note');
 		let time = duration + "n";
 		if (!keyExists(keyPosition)) {
 			addLocalKey(keyPosition, time);
-			document.getElementById(keyPosition)?.classList.add("bg-red-500");
 			handlePlayNote(note);
+			setActiveDraggables(prevState => ({
+				...prevState,
+				[keyPosition]: true,
+			}));
 		}
 
 
@@ -66,13 +70,17 @@ const Sheet = ({
 										{Array.from({ length: 32 }).map((_, positionIndex) => {
 											const cellId = setDataNote(positionIndex, mesureIndex, note);
 											return (
-												<Droppable key={cellId} id={cellId}
-													className={`flex-1 h-3 z-10 ${[3, 7, 11, 15, 19, 23, 27].includes(positionIndex) ? "border-r-1 border-black" : ""}`}
-													onClick={(e) => handleNoteClick(e, note, mesureIndex, selectedResolution)}
-													onDoubleClick={(e) => handleDeleteNote(e, note, mesureIndex)}>
-													{parent === cellId && <Draggable id="draggable" className="flex h-3 w-full bg-purple-600"></Draggable>}
-												</Droppable>
-
+												<div id={cellId} data-note={cellId} className="flex h-3 w-full">
+													<Droppable key={cellId} id={cellId}
+														data-note={cellId}
+														className={`flex-1 h-3 w-full ${[3, 7, 11, 15, 19, 23, 27].includes(positionIndex) ? "border-r-1 border-black" : ""}`}
+														onClick={(e) => handleNoteClick(e, note, mesureIndex, selectedResolution)}
+														onDoubleClick={(e) => handleDeleteNote(e, note, mesureIndex)}>
+														{activeDraggables[cellId] && (
+															<Draggable key={cellId} id="draggable" className="flex h-3 w-full bg-purple-600 z-50">
+															</Draggable>
+														)}													</Droppable>
+												</div>
 											);
 										})}
 									</div>
