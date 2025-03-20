@@ -16,6 +16,9 @@ const Sheet = ({
 	const [activeDraggables, setActiveDraggables] = useState({});
 	const [parent, setParent] = useState("droppable"); // Stocke la position actuelle du draggable
 
+	const MemoizedDroppable = React.memo(Droppable);
+	const MemoizedDraggable = React.memo(Draggable);
+
 	function handleNoteClick(e, note, mesureIndex, duration) {
 
 		const keyPosition = e.currentTarget.getAttribute('data-note');
@@ -30,6 +33,10 @@ const Sheet = ({
 		}
 
 
+	}
+	function handleDraggableDoubleClick(e, note, mesureIndex) {
+		e.stopPropagation(); // Empêche le double-clic de se propager au Droppable parent
+		handleDeleteNote(e, note, mesureIndex);
 	}
 
 	function handleDeleteNote(e, note, mesureIndex) {
@@ -89,18 +96,19 @@ const Sheet = ({
 									<div className="absolute top-0 left-0 right-0 flex">
 										{Array.from({ length: 32 }).map((_, positionIndex) => {
 											const cellId = setDataNote(positionIndex, mesureIndex, note);
+
 											return (
 												<div id={cellId} data-note={cellId} className="flex h-3 w-full">
-													<Droppable key={cellId} id={cellId}
+													<MemoizedDroppable key={cellId} id={cellId}
 														data-note={cellId}
 														className={`flex-1 h-3 w-full ${[3, 7, 11, 15, 19, 23, 27].includes(positionIndex) ? "border-r-1 border-black" : ""}`}
 														onClick={(e) => handleNoteClick(e, note, mesureIndex, selectedResolution)}
 														onDoubleClick={(e) => handleDeleteNote(e, note, mesureIndex)}>
 														{activeDraggables[cellId] && (
-															<Draggable key={cellId} id={cellId} data-note={cellId}
-																className="flex h-3 w-full bg-purple-600 z-50"
-																onDoubleClick={(e) => handleDeleteNote(e, note, mesureIndex)} />
-														)}													</Droppable>
+															<MemoizedDraggable key={cellId} id={cellId} data-note={cellId}
+																className="flex h-3 w-full bg-purple-600 z-50" />
+														)}
+													</MemoizedDroppable>
 												</div>
 											);
 										})}
