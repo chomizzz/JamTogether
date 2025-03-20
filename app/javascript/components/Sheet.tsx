@@ -14,6 +14,7 @@ const Sheet = ({
 }) => {
 
 	const [activeDraggables, setActiveDraggables] = useState({});
+	const [parent, setParent] = useState("droppable"); // Stocke la position actuelle du draggable
 
 	function handleNoteClick(e, note, mesureIndex, duration) {
 
@@ -32,10 +33,14 @@ const Sheet = ({
 	}
 
 	function handleDeleteNote(e, note, mesureIndex) {
-		const keyPosition = e.target.getAttribute('data-note');
+		const keyPosition = e.currentTarget.getAttribute('data-note');
 		if (keyExists(keyPosition)) {
 			removeLocalKey(keyPosition);
-			document.getElementById(keyPosition)?.classList.remove("bg-red-500");
+			setActiveDraggables((prevState) => {
+				const newState = { ...prevState };
+				delete newState[keyPosition];
+				return newState;
+			});
 		}
 
 	}
@@ -48,15 +53,30 @@ const Sheet = ({
 		return Math.floor(positionIndex * factor);
 	}
 
-	const [parent, setParent] = useState("droppable"); // Stocke la position actuelle du draggable
 
 	const handleDragEnd = (event) => {
-		const { over } = event;
-		if (over) {
-			setParent(over.id); // Met à jour la position de l'élément
+		const { active, over } = event;
+
+		if (!over) return;
+
+		const oldId = active.id;
+		const newId = over.id;
+
+		if (oldId !== newId) {
+			if (keyExists(oldId)) {
+				removeLocalKey(oldId);
+			}
+
+			addLocalKey(newId, selectedResolution + "n"); // Ajoute la note avec la nouvelle clé
+
+			setActiveDraggables(prevState => {
+				const newState = { ...prevState };
+				delete newState[oldId];
+				newState[newId] = true;
+				return newState;
+			});
 		}
 	};
-
 	return (
 		<DndContext onDragEnd={handleDragEnd}>
 			<div className="w-full">
@@ -77,8 +97,9 @@ const Sheet = ({
 														onClick={(e) => handleNoteClick(e, note, mesureIndex, selectedResolution)}
 														onDoubleClick={(e) => handleDeleteNote(e, note, mesureIndex)}>
 														{activeDraggables[cellId] && (
-															<Draggable key={cellId} id="draggable" className="flex h-3 w-full bg-purple-600 z-50">
-															</Draggable>
+															<Draggable key={cellId} id={cellId} data-note={cellId}
+																className="flex h-3 w-full bg-purple-600 z-50"
+																onDoubleClick={(e) => handleDeleteNote(e, note, mesureIndex)} />
 														)}													</Droppable>
 												</div>
 											);
@@ -90,7 +111,6 @@ const Sheet = ({
 					}
 				</div >
 			</div >
-			<div className="flex h-3">{parent === "droppable" && <Draggable id="draggable" className="flex h-3 w-full bg-purple-600">🎵</Draggable>}</div>
 
 		</DndContext >
 	)
