@@ -100,8 +100,18 @@ const Play = ({ room, userSlot, userInstrument }) => {
         };
     }, []);
 
+    function colorNote(note) {
+        const element = document.getElementById(note)
+        element?.classList.add("highlight");
+        setTimeout(() => {
+            element?.classList.remove("highlight");
+        }, 250);
+
+    }
+
     function handlePlayNote(note) {
         synth.triggerAttackRelease(note, "16n");
+        colorNote(note);
     };
 
     function startAndStopSequencer() {
@@ -118,6 +128,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
                             if (item != null) {
                                 let noteTime = item.split("-");
                                 synth.triggerAttackRelease(noteTime[0], noteTime[1], time);
+                                colorNote(noteTime[0]);
                             }
                         });
                     }

@@ -7,7 +7,7 @@ const PianoRoll = ({ handlePlayNote, keyNote }) => {
 
 			{keyNote.map((item) => {
 				return (
-					<div className={!item.includes("#") ? "bg-white border border-black w-10 h-3"
+					<div id={item} className={!item.includes("#") ? "bg-white border border-black w-10 h-3"
 						: "bg-black border border-white w-10 h-3"}
 						onClick={() => handlePlayNote(item)}>
 					</div>
