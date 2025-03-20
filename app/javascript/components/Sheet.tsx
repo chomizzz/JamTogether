@@ -43,12 +43,8 @@ const Sheet = ({
 		const factor = 32 / selectedResolution;
 		return Math.floor(positionIndex * factor);
 	}
-	const [parent, setParent] = useState("droppable");
-	//const draggable = (
-	//	<Draggable id="draggable">
-	//		Go ahead, drag me.
-	//	</Draggable>
-	//);
+
+	const [parent, setParent] = useState("droppable"); // Stocke la position actuelle du draggable
 
 	const handleDragEnd = (event) => {
 		const { over } = event;
@@ -56,43 +52,39 @@ const Sheet = ({
 			setParent(over.id); // Met à jour la position de l'élément
 		}
 	};
+
 	return (
-		<div className="w-full">
-			<div className="flex flex-col-reverse bg-green-400 w-full">
+		<DndContext onDragEnd={handleDragEnd}>
+			<div className="w-full">
+				<div className="flex flex-col-reverse bg-green-400 w-full">
 
-				{keyNote.map((note, noteIndex) => (
-					<div className="flex flex-row h-3 w-full">
-						{Array.from({ length: 4 }).map((_, mesureIndex) => (
-							<div key={`measure-${note}-${mesureIndex}`} className="flex relative bg-gray-400 border-r-4 border-y border-black w-1/4">
-								<div className="absolute top-0 left-0 right-0 flex">
-									{Array.from({ length: 32 }).map((_, positionIndex) => (
+					{keyNote.map((note, noteIndex) => (
+						<div key={note} className="flex flex-row h-3 w-full">
+							{Array.from({ length: 4 }).map((_, mesureIndex) => (
+								<div key={`measure-${note}-${mesureIndex}`} className="flex relative bg-gray-400 border-r-4 border-y border-black w-1/4">
+									<div className="absolute top-0 left-0 right-0 flex">
+										{Array.from({ length: 32 }).map((_, positionIndex) => {
+											const cellId = setDataNote(positionIndex, mesureIndex, note);
+											return (
+												<Droppable key={cellId} id={cellId}
+													className={`flex-1 h-3 z-10 ${[3, 7, 11, 15, 19, 23, 27].includes(positionIndex) ? "border-r-1 border-black" : ""}`}
+													onClick={(e) => handleNoteClick(e, note, mesureIndex, selectedResolution)}
+													onDoubleClick={(e) => handleDeleteNote(e, note, mesureIndex)}>
+													{parent === cellId && <Draggable id="draggable" className="flex h-3 w-full bg-purple-600"></Draggable>}
+												</Droppable>
 
-										<div
-											id={setDataNote(positionIndex, mesureIndex, note)}
-											className={`flex-1 h-3 ${[3, 7, 11, 15, 19, 23, 27].includes(positionIndex) ? "border-r-1 border-black" : ""}`}>
-										</div>
+											);
+										})}
+									</div>
 
-
-									))}
-								</div>
-
-								<div className="absolute top-0 left-0 right-0 flex z-10">
-									{Array.from({ length: selectedResolution }).map((_, positionIndex) => {
-										const mappedIndex = mapPositionTo32Grid(positionIndex, selectedResolution);
-										return (<div
-											data-note={setDataNote(mappedIndex, mesureIndex, note)}
-											className={`flex-1 h-3  hover:bg-purple-700 hover:opacity-20 z-10`}
-											onClick={(e) => handleNoteClick(e, note, mesureIndex, selectedResolution)}
-											onDoubleClick={(e) => handleDeleteNote(e, note, mesureIndex)}>
-										</div>)
-
-									})}
-								</div>
-							</div>))}
-					</div>))
-				}
+								</div>))}
+						</div>))
+					}
+				</div >
 			</div >
-		</div >
+			<div className="flex h-3">{parent === "droppable" && <Draggable id="draggable" className="flex h-3 w-full bg-purple-600">🎵</Draggable>}</div>
+
+		</DndContext >
 	)
 }
 export default Sheet;

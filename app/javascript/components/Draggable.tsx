@@ -10,11 +10,10 @@ export function Draggable(props) {
     const style = {
         // Outputs `translate3d(x, y, 0)`
         transform: CSS.Translate.toString(transform),
-        backgroundColor: "red",
     };
 
     return (
-        <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
+        <button ref={setNodeRef} style={style} {...listeners} className={props.className || ""} {...attributes}>
             {props.children}
         </button>
     );

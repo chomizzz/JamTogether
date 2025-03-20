@@ -5,12 +5,14 @@ export function Droppable(props) {
     const { isOver, setNodeRef } = useDroppable({
         id: props.id,
     });
+
     const style = {
         opacity: isOver ? 1 : 0.5,
+        ...props.style
     };
 
     return (
-        <div ref={setNodeRef} style={style}>
+        <div ref={setNodeRef} style={style} className={props.className || ""}>
             {props.children}
         </div>
     );
