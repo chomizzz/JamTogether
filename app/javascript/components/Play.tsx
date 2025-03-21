@@ -30,23 +30,18 @@ const Play = ({ room, userSlot, userInstrument }) => {
         let note = valueSplit[1];
 
         if (localKey[index] === null) {
-            console.log(false);
             return false;
         } else if (Array.isArray(localKey[index])) {
             for (let i = 0; i < localKey[index].length; i++) {
                 if (localKey[index][i].split("-")[0] === note) {
-                    console.log(true);
                     return true;
                 }
             }
-            console.log(false);
             return false;
         } else {
             if (localKey[index].split("-")[0] === note) {
-                console.log(true);
                 return true;
             } else {
-                console.log(false);
                 return false;
             }
         }
@@ -75,7 +70,6 @@ const Play = ({ room, userSlot, userInstrument }) => {
 
             return newArray;
         });
-        console.log(localKey);
     }
 
     function removeLocalKey(value) {
