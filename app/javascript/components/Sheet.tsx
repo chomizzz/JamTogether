@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { closestCorners, DndContext } from '@dnd-kit/core';
+import React, { useCallback, useEffect, useState, useRef, useMemo } from 'react';
+import { DndContext, rectIntersection, useSensor, useSensors, PointerSensor } from '@dnd-kit/core';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { Droppable } from './Droppable';
 import { Draggable } from './Draggable';
 
@@ -14,13 +15,18 @@ const Sheet = ({
 }) => {
 
 	const [activeDraggables, setActiveDraggables] = useState({});
-	const [parent, setParent] = useState("droppable"); // Stocke la position actuelle du draggable
+	const gridRef = useRef(null);
 
-	const MemoizedDroppable = React.memo(Droppable);
-	const MemoizedDraggable = React.memo(Draggable);
-
-	function handleNoteClick(e, note, mesureIndex, duration) {
-
+	const sensors = useSensors(
+		useSensor(PointerSensor, {
+			// Réduire la distance d'activation pour que le drag démarre plus rapidement
+			activationConstraint: {
+				distance: 2, // Démarre le drag après 2px de mouvement au lieu de la valeur par défaut plus élevée
+				tolerance: 5, // Plus tolérant en cas de léger mouvement
+			},
+		})
+	);
+	const handleNoteClick = useCallback((e, note, mesureIndex, duration) => {
 		const keyPosition = e.currentTarget.getAttribute('data-note');
 		let time = duration + "n";
 		if (!keyExists(keyPosition)) {
@@ -31,15 +37,15 @@ const Sheet = ({
 				[keyPosition]: true,
 			}));
 		}
+	}, [keyExists, addLocalKey, handlePlayNote]);
 
-
-	}
-	function handleDraggableDoubleClick(e, note, mesureIndex) {
+	const handleDraggableDoubleClick = useCallback((e, note, mesureIndex) => {
 		e.stopPropagation(); // Empêche le double-clic de se propager au Droppable parent
 		handleDeleteNote(e, note, mesureIndex);
-	}
+	}, [keyExists, removeLocalKey]);
 
-	function handleDeleteNote(e, note, mesureIndex) {
+	const handleDeleteNote = useCallback((e, note, mesureIndex) => {
+		e.preventDefault();
 		const keyPosition = e.currentTarget.getAttribute('data-note');
 		if (keyExists(keyPosition)) {
 			removeLocalKey(keyPosition);
@@ -50,18 +56,13 @@ const Sheet = ({
 			});
 		}
 
-	}
+	}, [keyExists, removeLocalKey]);
 
-	function setDataNote(positionIndex, mesureIndex, note) {
+	const setDataNote = useCallback((positionIndex, mesureIndex, note) => {
 		return mesureIndex * 32 + positionIndex + `-` + note;
-	}
-	function mapPositionTo32Grid(positionIndex, selectedResolution) {
-		const factor = 32 / selectedResolution;
-		return Math.floor(positionIndex * factor);
-	}
+	}, []);
 
-
-	const handleDragEnd = (event) => {
+	const handleDragEnd = useCallback((event) => {
 		const { active, over } = event;
 
 		if (!over) return;
@@ -83,11 +84,39 @@ const Sheet = ({
 				return newState;
 			});
 		}
-	};
+	}, [keyExists, removeLocalKey, addLocalKey, selectedResolution]);
+
+	// Optimisation 3: Créer une version allégée de Droppable pour les zones inactives
+	const LightDroppable = useCallback(({ id, className, onClick, onContextMenu }) => {
+		// Version simplifiée qui évite les calculs coûteux inutiles pour les zones vides
+		return (
+			<div
+				id={id}
+				data-note={id}
+				className={className}
+				onClick={onClick}
+				onContextMenu={onContextMenu}
+			>
+			</div>
+		);
+	}, []);
+
+	const positionStyles = useMemo(() => {
+		const styles = {};
+		[3, 7, 11, 15, 19, 23, 27].forEach(pos => {
+			styles[pos] = "border-r-1 border-black";
+		});
+		return styles;
+	}, []);
+
+
 	return (
-		<DndContext onDragEnd={handleDragEnd}>
-			<div className="w-full">
-				<div className="flex flex-col-reverse bg-green-400 w-full">
+		<DndContext
+			onDragEnd={handleDragEnd}
+			sensors={sensors}
+			modifiers={[restrictToWindowEdges]}
+		>			<div className="w-full">
+				<div className="flex flex-col-reverse bg-green-400 w-full" ref={gridRef}>
 
 					{keyNote.map((note, noteIndex) => (
 						<div key={note} className="flex flex-row h-3 w-full">
@@ -96,19 +125,19 @@ const Sheet = ({
 									<div className="absolute top-0 left-0 right-0 flex">
 										{Array.from({ length: 32 }).map((_, positionIndex) => {
 											const cellId = setDataNote(positionIndex, mesureIndex, note);
-
+											const borderStyle = positionStyles[positionIndex] || "";
 											return (
 												<div id={cellId} data-note={cellId} className="flex h-3 w-full">
-													<MemoizedDroppable key={cellId} id={cellId}
+													<Droppable key={cellId} id={cellId}
 														data-note={cellId}
-														className={`flex-1 h-3 w-full ${[3, 7, 11, 15, 19, 23, 27].includes(positionIndex) ? "border-r-1 border-black" : ""}`}
+														className={`flex-1 h-3 w-full ${borderStyle}`}
 														onClick={(e) => handleNoteClick(e, note, mesureIndex, selectedResolution)}
-														onDoubleClick={(e) => handleDeleteNote(e, note, mesureIndex)}>
+														onContextMenu={(e) => handleDeleteNote(e, note, mesureIndex)}>
 														{activeDraggables[cellId] && (
-															<MemoizedDraggable key={cellId} id={cellId} data-note={cellId}
+															<Draggable key={cellId} id={cellId} data-note={cellId}
 																className="flex h-3 w-full bg-purple-600 z-50" />
 														)}
-													</MemoizedDroppable>
+													</Droppable>
 												</div>
 											);
 										})}
