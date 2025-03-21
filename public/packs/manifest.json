@@ -7,7 +7,7 @@
         "js": [
           "/packs/js/runtime.js",
           "/packs/js/vendors-node_modules_pmmmwh_react-refresh-webpack-plugin_lib_runtime_RefreshUtils_js-node_mod-90821d.js",
-          "/packs/js/vendors-node_modules_dnd-kit_core_dist_core_esm_js-node_modules_dnd-kit_modifiers_dist_modifi-4898af.js",
+          "/packs/js/vendors-node_modules_dnd-kit_core_dist_core_esm_js-node_modules_hotwired_turbo-rails_app_java-285772.js",
           "/packs/js/application.js"
         ]
       }
@@ -26,8 +26,8 @@
   "js/application.js.map": "/packs/js/application.js.map",
   "js/remove_error.js.map": "/packs/js/remove_error.js.map",
   "js/runtime.js.map": "/packs/js/runtime.js.map",
-  "js/vendors-node_modules_dnd-kit_core_dist_core_esm_js-node_modules_dnd-kit_modifiers_dist_modifi-4898af.js": "/packs/js/vendors-node_modules_dnd-kit_core_dist_core_esm_js-node_modules_dnd-kit_modifiers_dist_modifi-4898af.js",
-  "js/vendors-node_modules_dnd-kit_core_dist_core_esm_js-node_modules_dnd-kit_modifiers_dist_modifi-4898af.js.map": "/packs/js/vendors-node_modules_dnd-kit_core_dist_core_esm_js-node_modules_dnd-kit_modifiers_dist_modifi-4898af.js.map",
+  "js/vendors-node_modules_dnd-kit_core_dist_core_esm_js-node_modules_hotwired_turbo-rails_app_java-285772.js": "/packs/js/vendors-node_modules_dnd-kit_core_dist_core_esm_js-node_modules_hotwired_turbo-rails_app_java-285772.js",
+  "js/vendors-node_modules_dnd-kit_core_dist_core_esm_js-node_modules_hotwired_turbo-rails_app_java-285772.js.map": "/packs/js/vendors-node_modules_dnd-kit_core_dist_core_esm_js-node_modules_hotwired_turbo-rails_app_java-285772.js.map",
   "js/vendors-node_modules_pmmmwh_react-refresh-webpack-plugin_lib_runtime_RefreshUtils_js-node_mod-90821d.js": "/packs/js/vendors-node_modules_pmmmwh_react-refresh-webpack-plugin_lib_runtime_RefreshUtils_js-node_mod-90821d.js",
   "js/vendors-node_modules_pmmmwh_react-refresh-webpack-plugin_lib_runtime_RefreshUtils_js-node_mod-90821d.js.map": "/packs/js/vendors-node_modules_pmmmwh_react-refresh-webpack-plugin_lib_runtime_RefreshUtils_js-node_mod-90821d.js.map",
   "remove_error.js": "/packs/js/remove_error.js",

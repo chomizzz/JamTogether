@@ -4,7 +4,7 @@ import Parameters from './Parameters';
 import PianoRoll from './PianoRoll';
 import Sheet from './Sheet';
 
-const MAXRESOLUTION = 32;
+const MAXRESOLUTION = 64;
 
 const Play = ({ room, userSlot, userInstrument }) => {
     const synth = new Tone.PolySynth().toDestination();
@@ -158,13 +158,13 @@ const Play = ({ room, userSlot, userInstrument }) => {
             <div className="flex-row flex">
                 <PianoRoll handlePlayNote={handlePlayNote} keyNote={keyNote} />
                 <Sheet
-                    localKey={localKey}
                     addLocalKey={addLocalKey}
                     removeLocalKey={removeLocalKey}
                     keyExists={keyExists}
                     keyNote={keyNote}
                     selectedResolution={selectedResolution}
                     handlePlayNote={handlePlayNote}
+                    MAXRESOLUTION={MAXRESOLUTION}
                 />
             </div>
 
