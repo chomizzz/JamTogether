@@ -18,7 +18,7 @@ Voici une liste non exhaustive des fonctionnalités développées :
 - Fonctionnalité de drag and drop pour les notes sur le séquenceur
 - Gestion logique du séquenceur (lecture des notes / écriture de la partition)
 
-Cette liste sera mise à jour au fur et à mesure de l'avancement du projet. Si vous tombez dessus par hasard, soyez indulgent quant à la qualité de mon code, je n'ai pas pris le temps de le nettoyer.
+Cette liste sera mise à jour au fur et à mesure de l'avancement du projet. Si vous tombez dessus par hasard, soyez indulgent quant à la qualité de mon code ce projet est en phase d'expérimentation.
 
 ---
 
