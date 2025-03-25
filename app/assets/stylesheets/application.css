@@ -34,3 +34,10 @@
 .highlight {
     background: purple !important;
 }
+
+.your-element {
+  resize: horizontal !important;
+  display: block !important;
+  overflow: hidden !important;
+}
+

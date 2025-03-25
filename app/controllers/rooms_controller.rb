@@ -46,7 +46,6 @@ class RoomsController < ApplicationController
       @room.save
       redirect_to @room
     end
-
   end
 
 
@@ -106,10 +105,6 @@ class RoomsController < ApplicationController
       return
     end
 
-    # Créez ou récupérez le slot pour l'utilisateur
-    # slot = room.create_spectator_slot
-    # current_user.take_spectator_slot(slot, room)
-
     # Enregistrer les associations (si nécessaire)
     room.slots.each do |slot|
       if slot.is_occupied == false
@@ -139,7 +134,4 @@ class RoomsController < ApplicationController
   def rooms_params
     params.require(:room).permit(:name, :maxPlayer, :style)
   end
-
 end
-
-

@@ -4,17 +4,13 @@ import Parameters from './Parameters';
 import PianoRoll from './PianoRoll';
 import Sheet from './Sheet';
 
-const MAXRESOLUTION = 64;
+const MAXRESOLUTION = 32;
 
 const Play = ({ room, userSlot, userInstrument }) => {
     const synth = new Tone.PolySynth().toDestination();
     const [selectedResolution, setSelectedResolution] = useState(8);
     const keyNote = ["C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4", "C5"];
-    const getNoteWidth = (noteDuration, resolution) => {
-        return noteDuration / resolution;
-    };
     const [localKey, setLocalKey] = useState(new Array(128).fill(null));
-    const [valueInserted, setValueInserted] = useState(false); // État pour savoir si une valeur a été insérée
     const [sequencerActive, setSequencerActive] = useState(false);
     const [bpm, setBpm] = useState(100);
     useEffect(() => {
@@ -23,8 +19,8 @@ const Play = ({ room, userSlot, userInstrument }) => {
     const [sequencer, setSequencer] = useState(null);
 
 
-
-    function keyExists(dataNote) {
+    //On regarde si la valeur est présente dans le tableau des localKey 
+    function keyExists(dataNote: string) {
         let valueSplit = dataNote.split("-");
         let index = valueSplit[0];
         let note = valueSplit[1];
@@ -48,7 +44,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
     }
 
 
-    function addLocalKey(value, time) {
+    function addLocalKey(value: string, time: string) {
         let valueSplit = value.split("-");
         let index = valueSplit[0];
         let note = valueSplit[1];
@@ -56,18 +52,11 @@ const Play = ({ room, userSlot, userInstrument }) => {
 
         setLocalKey((prevLocalKey) => {
             const newArray = [...prevLocalKey];
-            let valueWasInserted = false;
-
             if (newArray[index] === null) {
                 newArray[index] = [note + "-" + time];
-                valueWasInserted = true;
             } else if (Array.isArray(newArray[index])) {
                 newArray[index].push(note + "-" + time);
-                valueWasInserted = true;
-            } else {
-                valueWasInserted = false;
             }
-
             return newArray;
         });
     }
@@ -80,11 +69,9 @@ const Play = ({ room, userSlot, userInstrument }) => {
             const updateLocalKey = [...localKey]
             updateLocalKey[index] = null;
             setLocalKey(updateLocalKey);
-            return true;
-        } else {
-            return false
         }
     }
+
     // permet de monter tone puis de le démonter au moment de quitter la page
     useEffect(() => {
         Tone.start();
@@ -94,7 +81,8 @@ const Play = ({ room, userSlot, userInstrument }) => {
         };
     }, []);
 
-    function colorNote(note) {
+    // Color la note jouée dans le pianoRoll
+    function colorNote(note: string) {
         const element = document.getElementById(note)
         element?.classList.add("highlight");
         setTimeout(() => {
@@ -103,7 +91,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
 
     }
 
-    function handlePlayNote(note) {
+    function handlePlayNote(note: string) {
         synth.triggerAttackRelease(note, "16n");
         colorNote(note);
     };
@@ -144,6 +132,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
         // Mettre à jour l'état après avoir effectué l'action
         setSequencerActive(newState);
     };
+
     return (
         <div className="flex-col">
             <Parameters
@@ -166,6 +155,9 @@ const Play = ({ room, userSlot, userInstrument }) => {
                     handlePlayNote={handlePlayNote}
                     MAXRESOLUTION={MAXRESOLUTION}
                 />
+            </div>
+            <div id="caca" className="flex w-full h-40">
+                <div className="block min-w-[70px] bg-pink-700 your-element" />
             </div>
 
         </div>

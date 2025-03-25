@@ -1,7 +1,7 @@
-import React, { useCallback, useState, useMemo, useLayoutEffect } from 'react';
-import { DndContext, DragStartEvent, DragEndEvent } from '@dnd-kit/core';
+import React, { useCallback, useState, useMemo, useLayoutEffect, useEffect } from 'react';
+import { DndContext, DragStartEvent } from '@dnd-kit/core';
 import { Draggable } from './Draggable';
-
+import { DraggableResizable } from './DraggableResizable';
 //Composant qui permet de créer un grille pour y déposer des notes. Les élements sont déplacable pour cela on utilise dbd-kit : core, Pour optimiser au lieu de créer pleins de <Droppable> on recupère la position de la souris
 //et on ajoute un <Draggable> la ou on relache le click. Il n'y a pas vraiment de déplacement mais une suppression d'un lieu et un ajout au nouvel endroit.
 const Sheet = ({
@@ -16,13 +16,22 @@ const Sheet = ({
 	const [activeDroppables, setActiveDroppables] = useState({});
 	const [draggedItem, setDraggedItem] = useState<string | null>(null);
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+	const [resizedNotes, setResizedNotes] = useState<{ [key: string]: number }>({});
+	const [divPosition, setDivPosition] = useState({ x: 0, y: 0 });
+	const handleNoteResize = useCallback((cellId: string, width: number) => {
+		setResizedNotes(prev => ({
+			...prev,
+			[cellId]: width
+		}));
+	}, []);
 
-
-	// Utiliser useLayoutEffect pour s'assurer que la mise en page est synchronisée, permet de récupérer la position de la souris avant le prochain rendu. 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (draggedItem) {
 			const handleMouseMove = (e: MouseEvent) => {
-				setMousePosition({ x: e.clientX, y: e.clientY });
+				setMousePosition({
+					x: e.clientX,
+					y: e.clientY
+				});
 			};
 
 			window.addEventListener('mousemove', handleMouseMove);
@@ -76,32 +85,16 @@ const Sheet = ({
 		setDraggedItem(String(active.id));
 	}, []);
 
-	const handleDragEnd = useCallback((event: DragEndEvent) => {
-		const { over } = event;
+
+	const handleDragEnd = useCallback(() => {
+
 		const oldId = draggedItem;
 		setDraggedItem(null);
 
 		if (!oldId) return;
 
-		if (over) {
-			const newId = over.id;
-			if (oldId !== newId) {
-				if (keyExists(oldId)) {
-					removeLocalKey(oldId);
-				}
-				addLocalKey(newId, selectedResolution + "n");
-				setActiveDroppables(prevState => {
-					const newState = { ...prevState };
-					delete newState[oldId];
-					newState[newId] = true;
-					return newState;
-				});
-			}
-			return;
-		}
-
-		const elementsUnderPoint = document.elementsFromPoint(mousePosition.x, mousePosition.y);
-		const targetElement = elementsUnderPoint.find(el => el.hasAttribute('data-note'));
+		const elementsUnderPoint = document.elementsFromPoint(divPosition.x, divPosition.y);
+		const targetElement = elementsUnderPoint.find(a => a.hasAttribute('data-note'));
 
 		if (targetElement) {
 			const newId = targetElement.getAttribute('data-note');
@@ -120,7 +113,8 @@ const Sheet = ({
 				});
 			}
 		}
-	}, [draggedItem, keyExists, removeLocalKey, addLocalKey, selectedResolution, mousePosition]);
+	}, [draggedItem, keyExists, removeLocalKey, addLocalKey, selectedResolution, divPosition]);
+
 
 	const positionStyles = useMemo(() => {
 		const styles = {};
@@ -132,7 +126,7 @@ const Sheet = ({
 		for (let i = 1; i <= numberOfSections; i++) {
 			const position = i * sectionSize;
 			if (position < MAXRESOLUTION) {
-				styles[position] = "border-r-1 border-black"; // Appliquer un style à la position
+				styles[position - 1] = "border-r-1 border-black";
 			}
 		}
 
@@ -154,13 +148,13 @@ const Sheet = ({
 										{Array.from({ length: MAXRESOLUTION }).map((_, positionIndex) => {
 											const cellId = setDataNote(positionIndex, mesureIndex, note);
 											const borderStyle = positionStyles[positionIndex] || "";
-											//ici on ne crée pas de zone Droppable, juste un créé un objet Draggable, permet d'alléger le composant
+											//ici on ne crée pas de zone Droppable, on créé seulement un objet Draggable, permet d'alléger le composant
 											return (
 												<div
 													key={cellId}
 													id={cellId}
 													data-note={cellId}
-													className={`flex-1 h-3 w-full ${borderStyle}`}
+													className={`flex-1 h-3 w-full ${borderStyle} overflow-visible`}
 													onClick={(e) => handleNoteClick(e, note, selectedResolution)}
 													onContextMenu={(e) => handleDeleteNote(e)}
 												>
@@ -169,9 +163,9 @@ const Sheet = ({
 															key={cellId}
 															id={cellId}
 															data-note={cellId}
-															className="flex h-3 w-full bg-purple-600 z-50"
-														/>
-													)}
+															className="block rounded-sm min-w-[20px] h-3 bg-purple-600 z-50 relative your-element"
+															setPosition={setDivPosition}
+														/>)}
 												</div>
 											);
 										})}
@@ -182,6 +176,7 @@ const Sheet = ({
 					))}
 				</div>
 			</div>
+
 		</DndContext>
 	);
 };
