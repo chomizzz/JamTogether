@@ -18,7 +18,7 @@ const Sheet = ({
 	const [divPosition, setDivPosition] = useState({ x: 0, y: 0 });
 	const multiplesOf11_25 = Array.from({ length: 128 }, (_, i) => Math.ceil(11.25 * (i + 1)));
 	const [size, setSize] = useState(multiplesOf11_25[3]);
-	//const [draggableSizes, setDraggableSizes] = useState({});
+
 
 	const handleNoteClick = useCallback((e: React.MouseEvent<HTMLElement>, note: string, duration: number) => {
 		const keyPosition = e.currentTarget.getAttribute('data-note');
@@ -38,13 +38,6 @@ const Sheet = ({
 		}
 	}, [keyExists, addLocalKey, handlePlayNote, size]);
 
-	//const handleSizeChange = (id, size) => {
-	//	setDraggableSizes(prev => ({
-	//		...prev,
-	//		[id]: size  // Met à jour la taille pour ce Draggable spécifique
-	//	}));
-	//};
-	//
 	const handleDeleteNote = useCallback((e: React.MouseEvent<HTMLElement>) => {
 		e.preventDefault();
 		const keyPosition = e.currentTarget.getAttribute('data-note');

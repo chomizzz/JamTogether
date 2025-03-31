@@ -42,7 +42,7 @@ export function Draggable(props) {
                     const rect = nodeRef.current.getBoundingClientRect();
                     const closestSize = getClosestSize(rect.width);
 
-                    setLocalSize(closestSize);
+                    //setLocalSize(closestSize);
                     props.setSize(closestSize);
                     props.setPosition({ x: rect.left, y: rect.top });
                 }
@@ -66,21 +66,12 @@ export function Draggable(props) {
     }, [transform, isDraggable]);
 
     useEffect(() => {
-        styleRef.current = {
-            transform: isDraggable ? CSS.Translate.toString(transform) : undefined,
-            width: `${localSize}px`
-        };
-
         // Si on a une référence à l'élément DOM, mettre à jour directement son style
         if (nodeRef.current) {
             nodeRef.current.style.width = `${localSize}px`;
         }
-    }, [localSize, isDraggable, transform]);
+    }, [transform]);
 
-    const styleRef = useRef({
-        transform: isDraggable ? CSS.Translate.toString(transform) : undefined,
-        width: `${props.size}px`
-    });
 
     const style = {
         transform: isDraggable ? CSS.Translate.toString(transform) : undefined,
