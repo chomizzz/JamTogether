@@ -3,6 +3,7 @@ import * as Tone from 'tone';
 import Parameters from './Parameters';
 import PianoRoll from './PianoRoll';
 import Sheet from './Sheet';
+import Draggable from './Draggable';
 
 const MAXRESOLUTION = 32;
 
@@ -156,10 +157,6 @@ const Play = ({ room, userSlot, userInstrument }) => {
                     MAXRESOLUTION={MAXRESOLUTION}
                 />
             </div>
-            <div id="caca" className="flex w-full h-40">
-                <div className="block min-w-[70px] bg-pink-700 your-element" />
-            </div>
-
         </div>
     )
 };

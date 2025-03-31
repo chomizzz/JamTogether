@@ -35,9 +35,12 @@
     background: purple !important;
 }
 
-.your-element {
+.resizable {
   resize: horizontal !important;
   display: block !important;
   overflow: hidden !important;
+  position: absolute; /* Ou 'relative' selon le besoin */
+  z-index: 50; /* Place l'élément au-dessus des autres */
+  pointer-events: auto; /* Permet à l'élément d'être interactif */
 }
 

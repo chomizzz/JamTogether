@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useMemo, useLayoutEffect, useEffect } from 'react';
 import { DndContext, DragStartEvent } from '@dnd-kit/core';
 import { Draggable } from './Draggable';
-import { DraggableResizable } from './DraggableResizable';
+
 //Composant qui permet de créer un grille pour y déposer des notes. Les élements sont déplacable pour cela on utilise dbd-kit : core, Pour optimiser au lieu de créer pleins de <Droppable> on recupère la position de la souris
 //et on ajoute un <Draggable> la ou on relache le click. Il n'y a pas vraiment de déplacement mais une suppression d'un lieu et un ajout au nouvel endroit.
 const Sheet = ({
@@ -15,39 +15,18 @@ const Sheet = ({
 }) => {
 	const [activeDroppables, setActiveDroppables] = useState({});
 	const [draggedItem, setDraggedItem] = useState<string | null>(null);
-	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-	const [resizedNotes, setResizedNotes] = useState<{ [key: string]: number }>({});
 	const [divPosition, setDivPosition] = useState({ x: 0, y: 0 });
-	const handleNoteResize = useCallback((cellId: string, width: number) => {
-		setResizedNotes(prev => ({
-			...prev,
-			[cellId]: width
-		}));
-	}, []);
-
-	useEffect(() => {
-		if (draggedItem) {
-			const handleMouseMove = (e: MouseEvent) => {
-				setMousePosition({
-					x: e.clientX,
-					y: e.clientY
-				});
-			};
-
-			window.addEventListener('mousemove', handleMouseMove);
-			return () => {
-				window.removeEventListener('mousemove', handleMouseMove);
-			};
-		}
-	}, [draggedItem]);
+	const multiplesOf11_25 = Array.from({ length: 128 }, (_, i) => Math.ceil(11.25 * (i + 1)));
+	const [size, setSize] = useState(multiplesOf11_25[3]);
+	//const [draggableSizes, setDraggableSizes] = useState({});
 
 	const handleNoteClick = useCallback((e: React.MouseEvent<HTMLElement>, note: string, duration: number) => {
 		const keyPosition = e.currentTarget.getAttribute('data-note');
 
 		if (!keyPosition) return;
 
-		let time = duration + "n";
-
+		let time = multiplesOf11_25.indexOf(duration) + "n";
+		multiplesOf11_25.indexOf(duration)
 		//Si elle n'existe pas alors on ajoute la note
 		if (!keyExists(keyPosition)) {
 			addLocalKey(keyPosition, time);
@@ -57,8 +36,15 @@ const Sheet = ({
 				[keyPosition]: true,
 			}));
 		}
-	}, [keyExists, addLocalKey, handlePlayNote]);
+	}, [keyExists, addLocalKey, handlePlayNote, size]);
 
+	//const handleSizeChange = (id, size) => {
+	//	setDraggableSizes(prev => ({
+	//		...prev,
+	//		[id]: size  // Met à jour la taille pour ce Draggable spécifique
+	//	}));
+	//};
+	//
 	const handleDeleteNote = useCallback((e: React.MouseEvent<HTMLElement>) => {
 		e.preventDefault();
 		const keyPosition = e.currentTarget.getAttribute('data-note');
@@ -79,6 +65,7 @@ const Sheet = ({
 	const setDataNote = useCallback((positionIndex: number, mesureIndex: number, note: string) => {
 		return mesureIndex * MAXRESOLUTION + positionIndex + `-` + note;
 	}, []);
+
 
 	const handleDragStart = useCallback((event: DragStartEvent) => {
 		const { active } = event;
@@ -154,17 +141,21 @@ const Sheet = ({
 													key={cellId}
 													id={cellId}
 													data-note={cellId}
-													className={`flex-1 h-3 w-full ${borderStyle} overflow-visible`}
-													onClick={(e) => handleNoteClick(e, note, selectedResolution)}
+													className={`flex-1 h-3 w-full ${borderStyle}`}
+													onClick={(e) => handleNoteClick(e, note, size)}
 													onContextMenu={(e) => handleDeleteNote(e)}
 												>
 													{activeDroppables[cellId] && (
 														<Draggable
 															key={cellId}
 															id={cellId}
+															//onSizeChange={handleSizeChange}
 															data-note={cellId}
-															className="block rounded-sm min-w-[20px] h-3 bg-purple-600 z-50 relative your-element"
+															className="block rounded-sm h-3 bg-purple-600 z-50 relative resizable border border-white"
 															setPosition={setDivPosition}
+															setSize={setSize}
+															multiplesOf11_25={multiplesOf11_25}
+															size={size}
 														/>)}
 												</div>
 											);
@@ -175,6 +166,7 @@ const Sheet = ({
 						</div>
 					))}
 				</div>
+
 			</div>
 
 		</DndContext>
