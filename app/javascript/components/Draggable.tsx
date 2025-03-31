@@ -19,6 +19,7 @@ export function Draggable(props) {
         });
     };
 
+    //On met des petits commentaire pour voir si ca fonctionne lazyGit
     useEffect(() => {
         if (!nodeRef.current) return;
         const observer = new ResizeObserver(() => {

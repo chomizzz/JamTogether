@@ -20,6 +20,7 @@ const Sheet = ({
 	const [size, setSize] = useState(multiplesOf11_25[3]);
 
 
+	//pareil d'autre commentaire pour voir si ca fonctionne
 	const handleNoteClick = useCallback((e: React.MouseEvent<HTMLElement>, note: string, duration: number) => {
 		const keyPosition = e.currentTarget.getAttribute('data-note');
 
