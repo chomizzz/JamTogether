@@ -10,6 +10,12 @@ export function Draggable(props) {
     const lastPosition = useRef({ x: 0, y: 0 });
     const resizeTimeoutRef = useRef(null);
     const [localSize, setLocalSize] = useState(props.size);
+
+    useEffect(() => {
+        // On envoie au parent une fonction qui renvoie localSize pour cet ID
+        props.setGetDraggableSize(() => (id) => (id === props.id ? localSize : 0));
+    }, [localSize, props.id, props.setGetDraggableSize]);
+
     // Fonction pour obtenir la taille la plus proche dans le tableau size
     const getClosestSize = (width: number) => {
         return props.multiplesOf11_25.reduce((précédent: number, courant: number) => {
@@ -29,6 +35,9 @@ export function Draggable(props) {
                 const rect = nodeRef.current.getBoundingClientRect();
                 const closestSize = getClosestSize(rect.width);
 
+                props.removeLocalKey(props.id);
+                props.addLocalKey(props.id, localSize);
+
                 setLocalSize(closestSize);
                 props.setSize(closestSize);
                 lastPosition.current = { x: rect.left, y: rect.top };
@@ -43,9 +52,12 @@ export function Draggable(props) {
                     const rect = nodeRef.current.getBoundingClientRect();
                     const closestSize = getClosestSize(rect.width);
 
+                    props.removeLocalKey(props.id);
+                    props.addLocalKey(props.id, localSize);
                     //setLocalSize(closestSize);
                     props.setSize(closestSize);
                     props.setPosition({ x: rect.left, y: rect.top });
+                    lastPosition.current = { x: rect.left, y: rect.top };
                 }
             }, 500);
         });

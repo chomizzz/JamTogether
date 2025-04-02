@@ -18,15 +18,21 @@ const Sheet = ({
 	const [divPosition, setDivPosition] = useState({ x: 0, y: 0 });
 	const multiplesOf11_25 = Array.from({ length: 128 }, (_, i) => Math.ceil(11.25 * (i + 1)));
 	const [size, setSize] = useState(multiplesOf11_25[3]);
+	const [getDraggableSize, setGetDraggableSize] = useState<(id: string) => number>(
+		() => () => 45 // Fonction par défaut qui retourne toujours 0
+	);
 
 
-	//pareil d'autre commentaire pour voir si ca fonctionne
+
 	const handleNoteClick = useCallback((e: React.MouseEvent<HTMLElement>, note: string, duration: number) => {
 		const keyPosition = e.currentTarget.getAttribute('data-note');
 
+
 		if (!keyPosition) return;
 
-		let time = multiplesOf11_25.indexOf(duration) + "n";
+		let time = getDraggableSize(keyPosition);
+
+		//let time = multiplesOf11_25.indexOf(duration) + "n";
 		multiplesOf11_25.indexOf(duration)
 		//Si elle n'existe pas alors on ajoute la note
 		if (!keyExists(keyPosition)) {
@@ -37,7 +43,7 @@ const Sheet = ({
 				[keyPosition]: true,
 			}));
 		}
-	}, [keyExists, addLocalKey, handlePlayNote, size]);
+	}, []);
 
 	const handleDeleteNote = useCallback((e: React.MouseEvent<HTMLElement>) => {
 		e.preventDefault();
@@ -53,7 +59,7 @@ const Sheet = ({
 				return newState;
 			});
 		}
-	}, [keyExists, removeLocalKey]);
+	}, []);
 
 	//Crée l'identifiant de chaque div
 	const setDataNote = useCallback((positionIndex: number, mesureIndex: number, note: string) => {
@@ -94,7 +100,7 @@ const Sheet = ({
 				});
 			}
 		}
-	}, [draggedItem, keyExists, removeLocalKey, addLocalKey, selectedResolution, divPosition]);
+	}, [draggedItem, divPosition, selectedResolution, keyExists, removeLocalKey, addLocalKey]);
 
 
 	const positionStyles = useMemo(() => {
@@ -143,13 +149,16 @@ const Sheet = ({
 														<Draggable
 															key={cellId}
 															id={cellId}
-															//onSizeChange={handleSizeChange}
 															data-note={cellId}
 															className="block rounded-sm h-3 bg-purple-600 z-50 relative resizable border border-white"
 															setPosition={setDivPosition}
 															setSize={setSize}
 															multiplesOf11_25={multiplesOf11_25}
 															size={size}
+															setGetDraggableSize={setGetDraggableSize}
+															addLocalKey={addLocalKey}
+															removeLocalKey={removeLocalKey}
+															keyExists={keyExists}
 														/>)}
 												</div>
 											);
