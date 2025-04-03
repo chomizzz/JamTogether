@@ -35,9 +35,10 @@ export function Draggable(props) {
                 const rect = nodeRef.current.getBoundingClientRect();
                 const closestSize = getClosestSize(rect.width);
 
-                props.removeLocalKey(props.id);
-                props.addLocalKey(props.id, localSize);
-
+                if (!props.keyExists(props.id)) {
+                    props.removeLocalKey(props.id);
+                    props.addLocalKey(props.id, localSize);
+                }
                 setLocalSize(closestSize);
                 props.setSize(closestSize);
                 lastPosition.current = { x: rect.left, y: rect.top };
@@ -52,9 +53,11 @@ export function Draggable(props) {
                     const rect = nodeRef.current.getBoundingClientRect();
                     const closestSize = getClosestSize(rect.width);
 
-                    props.removeLocalKey(props.id);
-                    props.addLocalKey(props.id, localSize);
-                    //setLocalSize(closestSize);
+
+                    if (!props.keyExists(props.id)) {
+                        props.removeLocalKey(props.id);
+                        props.addLocalKey(props.id, localSize);
+                    }                    //setLocalSize(closestSize);
                     props.setSize(closestSize);
                     props.setPosition({ x: rect.left, y: rect.top });
                     lastPosition.current = { x: rect.left, y: rect.top };

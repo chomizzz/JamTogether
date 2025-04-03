@@ -43,7 +43,7 @@ const Sheet = ({
 				[keyPosition]: true,
 			}));
 		}
-	}, []);
+	}, [addLocalKey]);
 
 	const handleDeleteNote = useCallback((e: React.MouseEvent<HTMLElement>) => {
 		e.preventDefault();
@@ -68,13 +68,14 @@ const Sheet = ({
 
 
 	const handleDragStart = useCallback((event: DragStartEvent) => {
+		console.log("handleDragStart");
 		const { active } = event;
 		setDraggedItem(String(active.id));
 	}, []);
 
 
 	const handleDragEnd = useCallback(() => {
-
+		console.log("handleDragEnd");
 		const oldId = draggedItem;
 		setDraggedItem(null);
 

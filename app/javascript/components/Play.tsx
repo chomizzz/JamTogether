@@ -64,7 +64,6 @@ const Play = ({ room, userSlot, userInstrument }) => {
             } else {
                 newArray[index] = [newArray[index], note + "-" + time];
             }
-            console.log(newArray);
             return newArray;
         });
     }, []);
@@ -175,3 +174,4 @@ const Play = ({ room, userSlot, userInstrument }) => {
     )
 };
 export default Play;
+
