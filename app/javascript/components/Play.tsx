@@ -11,15 +11,19 @@ const Play = ({ room, userSlot, userInstrument }) => {
     const synth = new Tone.PolySynth().toDestination();
     const [selectedResolution, setSelectedResolution] = useState(8);
     const keyNote = ["C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4", "C5"];
+    const octaves = [0, 1, 2, 3, 4, 5, 6, 7, 8];
     const [localKey, setLocalKey] = useState(new Array(128).fill(null));
     const [sequencerActive, setSequencerActive] = useState(false);
     const [bpm, setBpm] = useState(100);
+    const multiplesOf11_25 = Array.from({ length: 128 }, (_, i) => Math.ceil(11.25 * (i + 1)));
+    const [size, setSize] = useState(multiplesOf11_25[3]);
     // Référence pour accéder à la dernière valeur de localKey
     const localKeyRef = useRef(localKey);
 
     // Mettre à jour la référence quand localKey change
     useEffect(() => {
         localKeyRef.current = localKey;
+        console.log(localKey);
     }, [localKey]);
 
     useEffect(() => {
@@ -36,24 +40,39 @@ const Play = ({ room, userSlot, userInstrument }) => {
         const currentLocalKey = localKeyRef.current;
 
         if (currentLocalKey[index] === null) {
+            console.log("false");
             return false;
         } else if (Array.isArray(currentLocalKey[index])) {
             for (let i = 0; i < currentLocalKey[index].length; i++) {
                 if (currentLocalKey[index][i].split("-")[0] === note) {
+                    console.log("true");
                     return true;
                 }
             }
+            console.log("false");
+
             return false;
         } else {
+            console.log("on entre dans ce cas");
             return currentLocalKey[index].split("-")[0] === note;
         }
     }, []);
 
+    const durationIntoTime = useCallback((duration: number) => {
+        const index = multiplesOf11_25.indexOf(duration) + 1;
 
-    const addLocalKey = useCallback((value: string, time: number) => {
+        const bpm = Tone.getTransport().bpm.value;
+        const noire = 60 / bpm; // Durée d'une noire en secondes
+
+        const temps32e = noire / 8; // 1 noire = 8 x 32e
+        return temps32e * index;
+    }, []);
+
+    const addLocalKey = useCallback((value: string, duration: number) => {
         const valueSplit = value.split("-");
         const index = valueSplit[0];
         const note = valueSplit[1];
+        const time = durationIntoTime(duration);
 
         setLocalKey((prevLocalKey) => {
             const newArray = [...prevLocalKey];
@@ -123,7 +142,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
                         localKey[step].forEach(item => {
                             if (item != null) {
                                 let noteTime = item.split("-");
-                                synth.triggerAttackRelease(noteTime[0], noteTime[1], time);
+                                synth.triggerAttackRelease(noteTime[0], parseFloat(noteTime[1]), time);
                                 colorNote(noteTime[0]);
                             }
                         });
@@ -149,8 +168,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
 
     return (
         <div className="flex-col">
-            <Parameters
-                setSelectedResolution={setSelectedResolution}
+            <Parameters setSelectedResolution={setSelectedResolution}
                 selectedResolution={selectedResolution}
                 MAXRESOLUTION={MAXRESOLUTION}
                 startAndStopSequencer={startAndStopSequencer}
@@ -168,6 +186,9 @@ const Play = ({ room, userSlot, userInstrument }) => {
                     selectedResolution={selectedResolution}
                     handlePlayNote={handlePlayNote}
                     MAXRESOLUTION={MAXRESOLUTION}
+                    size={size}
+                    setSize={setSize}
+                    multiplesOf11_25={multiplesOf11_25}
                 />
             </div>
         </div>

@@ -12,17 +12,25 @@ const Sheet = ({
 	selectedResolution,
 	handlePlayNote,
 	MAXRESOLUTION,
+	size,
+	setSize,
+	multiplesOf11_25,
 }) => {
 	const [activeDroppables, setActiveDroppables] = useState({});
 	const [draggedItem, setDraggedItem] = useState<string | null>(null);
 	const [divPosition, setDivPosition] = useState({ x: 0, y: 0 });
-	const multiplesOf11_25 = Array.from({ length: 128 }, (_, i) => Math.ceil(11.25 * (i + 1)));
-	const [size, setSize] = useState(multiplesOf11_25[3]);
+
 	const [getDraggableSize, setGetDraggableSize] = useState<(id: string) => number>(
 		() => () => 45 // Fonction par défaut qui retourne toujours 0
 	);
 
-
+	const getClosestSize = (width: number) => {
+		return multiplesOf11_25.reduce((précédent: number, courant: number) => {
+			return Math.abs(courant - width) < Math.abs(précédent - width)
+				? courant
+				: précédent;
+		});
+	};
 
 	const handleNoteClick = useCallback((e: React.MouseEvent<HTMLElement>, note: string, duration: number) => {
 		const keyPosition = e.currentTarget.getAttribute('data-note');
@@ -68,14 +76,12 @@ const Sheet = ({
 
 
 	const handleDragStart = useCallback((event: DragStartEvent) => {
-		console.log("handleDragStart");
 		const { active } = event;
 		setDraggedItem(String(active.id));
 	}, []);
 
 
 	const handleDragEnd = useCallback(() => {
-		console.log("handleDragEnd");
 		const oldId = draggedItem;
 		setDraggedItem(null);
 
@@ -92,7 +98,9 @@ const Sheet = ({
 				if (keyExists(oldId)) {
 					removeLocalKey(oldId);
 				}
-				addLocalKey(newId, selectedResolution + "n");
+				const element = targetElement.getBoundingClientRect()
+
+				addLocalKey(newId, getClosestSize(element.width));
 				setActiveDroppables(prevState => {
 					const newState = { ...prevState };
 					delete newState[oldId];
@@ -160,6 +168,7 @@ const Sheet = ({
 															addLocalKey={addLocalKey}
 															removeLocalKey={removeLocalKey}
 															keyExists={keyExists}
+															getClosestSize={getClosestSize}
 														/>)}
 												</div>
 											);

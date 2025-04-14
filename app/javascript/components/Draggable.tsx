@@ -17,13 +17,7 @@ export function Draggable(props) {
     }, [localSize, props.id, props.setGetDraggableSize]);
 
     // Fonction pour obtenir la taille la plus proche dans le tableau size
-    const getClosestSize = (width: number) => {
-        return props.multiplesOf11_25.reduce((précédent: number, courant: number) => {
-            return Math.abs(courant - width) < Math.abs(précédent - width)
-                ? courant
-                : précédent;
-        });
-    };
+
 
     //On met des petits commentaire pour voir si ca fonctionne lazyGit
     useEffect(() => {
@@ -33,12 +27,13 @@ export function Draggable(props) {
             // permet de pouvoir déplacer l'element sans avoir a cliquer une fois en +
             if (nodeRef.current) {
                 const rect = nodeRef.current.getBoundingClientRect();
-                const closestSize = getClosestSize(rect.width);
+                const closestSize = props.getClosestSize(rect.width);
 
                 if (!props.keyExists(props.id)) {
                     props.removeLocalKey(props.id);
-                    props.addLocalKey(props.id, localSize);
+                    props.addLocalKey(props.id, closestSize);
                 }
+
                 setLocalSize(closestSize);
                 props.setSize(closestSize);
                 lastPosition.current = { x: rect.left, y: rect.top };
@@ -50,14 +45,15 @@ export function Draggable(props) {
                 setIsDraggable(true);
                 //Pour l'instant pas besoin de redéfinir sa position car élement passe par dessus
                 if (nodeRef.current) {
-                    const rect = nodeRef.current.getBoundingClientRect();
-                    const closestSize = getClosestSize(rect.width);
 
+                    const rect = nodeRef.current.getBoundingClientRect();
+                    const closestSize = props.getClosestSize(rect.width);
 
                     if (!props.keyExists(props.id)) {
                         props.removeLocalKey(props.id);
-                        props.addLocalKey(props.id, localSize);
+                        props.addLocalKey(props.id, closestSize);
                     }                    //setLocalSize(closestSize);
+
                     props.setSize(closestSize);
                     props.setPosition({ x: rect.left, y: rect.top });
                     lastPosition.current = { x: rect.left, y: rect.top };
