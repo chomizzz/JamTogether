@@ -88,20 +88,33 @@ const Play = ({ room, userSlot, userInstrument }) => {
         });
     }, []);
 
-    const removeLocalKey = useCallback((value: string) => {
+    const removeLocalKey = useCallback((value: string, duration: number) => {
         const valueSplit = value.split("-");
         const index = valueSplit[0];
+        const note = valueSplit[1];
+        const time = durationIntoTime(duration);
 
         setLocalKey((prevLocalKey) => {
             if (prevLocalKey[index] !== null) {
-                const updateLocalKey = [...prevLocalKey];
-                updateLocalKey[index] = null;
+                let updateLocalKey = [...prevLocalKey];
+                if (Array.isArray(updateLocalKey[index])) {
+                    // Filtrer pour supprimer la note spécifique
+                    updateLocalKey[index] = updateLocalKey[index].filter(item => item !== `${note}-${time}`);
+                    // Si le tableau est vide après suppression, mettre à null
+                    if (updateLocalKey[index].length === 0) {
+                        updateLocalKey[index] = null;
+                    }
+                } else {
+                    // Si ce n'est pas un tableau, vérifier si c'est la note à supprimer
+                    if (updateLocalKey[index] === `${note}-${time}`) {
+                        updateLocalKey[index] = null;
+                    }
+                }
                 return updateLocalKey;
             }
             return prevLocalKey;
         });
     }, []);
-
     // permet de monter tone puis de le démonter au moment de quitter la page
     useEffect(() => {
         Tone.start();

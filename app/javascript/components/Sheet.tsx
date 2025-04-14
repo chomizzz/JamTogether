@@ -59,8 +59,11 @@ const Sheet = ({
 
 		if (!keyPosition) return;
 
+		let time = getDraggableSize(keyPosition);
+
+
 		if (keyExists(keyPosition)) {
-			removeLocalKey(keyPosition);
+			removeLocalKey(keyPosition, time);
 			setActiveDroppables((prevState) => {
 				const newState = { ...prevState };
 				delete newState[keyPosition];

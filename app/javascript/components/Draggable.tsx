@@ -10,6 +10,7 @@ export function Draggable(props) {
     const lastPosition = useRef({ x: 0, y: 0 });
     const resizeTimeoutRef = useRef(null);
     const [localSize, setLocalSize] = useState(props.size);
+    const isInitialRender = useRef(true);
 
     useEffect(() => {
         // On envoie au parent une fonction qui renvoie localSize pour cet ID
@@ -22,17 +23,24 @@ export function Draggable(props) {
     //On met des petits commentaire pour voir si ca fonctionne lazyGit
     useEffect(() => {
         if (!nodeRef.current) return;
+
+
+
         const observer = new ResizeObserver(() => {
             setIsDraggable(false);
+
             // permet de pouvoir déplacer l'element sans avoir a cliquer une fois en +
             if (nodeRef.current) {
                 const rect = nodeRef.current.getBoundingClientRect();
                 const closestSize = props.getClosestSize(rect.width);
 
-                if (!props.keyExists(props.id)) {
-                    console.log("useRef draggable", closestSize);
-                    props.removeLocalKey(props.id);
+                if (props.keyExists(props.id)) {
+                    props.removeLocalKey(props.id, localSize);
                     props.addLocalKey(props.id, closestSize);
+                    console.log("setLocalSize before :", localSize);
+                    setLocalSize(closestSize);
+                    console.log("setLocalSize after :", localSize);
+
                 }
 
                 setLocalSize(closestSize);
@@ -50,11 +58,11 @@ export function Draggable(props) {
                     const rect = nodeRef.current.getBoundingClientRect();
                     const closestSize = props.getClosestSize(rect.width);
 
-                    if (!props.keyExists(props.id)) {
-                        console.log("useRef2 draggable", closestSize);
-                        props.removeLocalKey(props.id);
-                        props.addLocalKey(props.id, closestSize);
-                    }                    //setLocalSize(closestSize);
+                    //if (props.keyExists(props.id)) {
+                    //    console.log("useRef2 draggable", closestSize);
+                    //    props.removeLocalKey(props.id);
+                    //    props.addLocalKey(props.id, closestSize);
+                    //} //setLocalSize(closestSize);
 
                     props.setSize(closestSize);
                     props.setPosition({ x: rect.left, y: rect.top });
@@ -69,7 +77,7 @@ export function Draggable(props) {
                 clearTimeout(resizeTimeoutRef.current);
             }
         };
-    }, []);
+    }, [localSize]);
 
 
     useEffect(() => {
