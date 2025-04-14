@@ -99,7 +99,7 @@ const Sheet = ({
 					removeLocalKey(oldId);
 				}
 				const element = targetElement.getBoundingClientRect()
-
+				console.log(element.width);
 				addLocalKey(newId, getClosestSize(element.width));
 				setActiveDroppables(prevState => {
 					const newState = { ...prevState };

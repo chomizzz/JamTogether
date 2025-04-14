@@ -61,6 +61,7 @@ const Play = ({ room, userSlot, userInstrument }) => {
     const durationIntoTime = useCallback((duration: number) => {
         const index = multiplesOf11_25.indexOf(duration) + 1;
 
+        console.log(duration);
         const bpm = Tone.getTransport().bpm.value;
         const noire = 60 / bpm; // Durée d'une noire en secondes
 

@@ -30,6 +30,7 @@ export function Draggable(props) {
                 const closestSize = props.getClosestSize(rect.width);
 
                 if (!props.keyExists(props.id)) {
+                    console.log("useRef draggable", closestSize);
                     props.removeLocalKey(props.id);
                     props.addLocalKey(props.id, closestSize);
                 }
@@ -50,6 +51,7 @@ export function Draggable(props) {
                     const closestSize = props.getClosestSize(rect.width);
 
                     if (!props.keyExists(props.id)) {
+                        console.log("useRef2 draggable", closestSize);
                         props.removeLocalKey(props.id);
                         props.addLocalKey(props.id, closestSize);
                     }                    //setLocalSize(closestSize);
