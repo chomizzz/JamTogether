@@ -1,0 +1,14 @@
+<div>
+  <%= button_to "⟳", spotify_refresh_path, method: :post, class:"rounded-sm bg-pink-700"%>
+</div>
+<div>
+  <% if @users.present? %>
+  <% @users.each do |user| %>
+    <div>
+      <%= link_to user.name, spotify_show_path(user.id), class: "rounded-sm bg-purple-700" %>
+    </div>
+  <% end %>
+<% else %>
+  <p>Aucun utilisateur trouvé.</p>
+<% end %>
+</div>

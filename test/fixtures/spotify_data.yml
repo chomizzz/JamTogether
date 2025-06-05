@@ -1,0 +1,49 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  platform: MyString
+  ms_played: 1
+  conn_country: MyString
+  ip_addr: MyString
+  master_metadata_track_name: MyString
+  master_metadata_album_artist_name: MyString
+  master_metadata_album_album_name: MyString
+  spotify_track_uri: MyString
+  episode_name: MyString
+  episode_show_name: MyString
+  spotify_episode_uri: MyString
+  audiobook_title: MyString
+  audiobook_uri: MyString
+  audiobook_chapter_uri: MyString
+  audiobook_chapter_title: MyString
+  reason_start: MyString
+  reason_end: MyString
+  shuffle: false
+  skipped: false
+  offline: false
+  offline_timestamp: MyString
+  incognito_mode: false
+
+two:
+  platform: MyString
+  ms_played: 1
+  conn_country: MyString
+  ip_addr: MyString
+  master_metadata_track_name: MyString
+  master_metadata_album_artist_name: MyString
+  master_metadata_album_album_name: MyString
+  spotify_track_uri: MyString
+  episode_name: MyString
+  episode_show_name: MyString
+  spotify_episode_uri: MyString
+  audiobook_title: MyString
+  audiobook_uri: MyString
+  audiobook_chapter_uri: MyString
+  audiobook_chapter_title: MyString
+  reason_start: MyString
+  reason_end: MyString
+  shuffle: false
+  skipped: false
+  offline: false
+  offline_timestamp: MyString
+  incognito_mode: false

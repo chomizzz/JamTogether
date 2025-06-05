@@ -64,8 +64,12 @@ gem "tailwindcss-ruby", "= 4.0.0.beta.8"
 
 gem "tailwindcss-rails", "~> 3.1"
 
-gem 'devise'
+gem "devise"
 
-gem 'turbo-rails'
+gem "turbo-rails"
 
-gem 'pundit'
+gem "pundit"
+
+gem "chartkick", "~> 5.1", ">= 5.1.5"
+
+gem "groupdate"

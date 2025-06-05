@@ -1,0 +1,2 @@
+class SpotifyDatum < ApplicationRecord
+end

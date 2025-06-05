@@ -2,10 +2,14 @@ Rails.application.routes.draw do
   get "chats/index"
   get "chats/create"
   get "room/index"
+  get "spotify/index"
   # Routes pour les utilisateurs via Devise
   devise_for :users, controllers: { registrations: "users/registrations" }
 
   post "presence/disconnected", to: "presence#disconnected"
+  post "spotify/refresh"
+
+  get "spotify/:id/show", to: "spotify#show", as: "spotify_show"
 
   # Définition des routes pour Room (les salles)
   resources :rooms
@@ -24,6 +28,7 @@ Rails.application.routes.draw do
 
 
 
+
   namespace :api do
     namespace :v1 do
       get "join_room/fetch_instruments/:slot_type_id", to: "join_room#fetch_instruments"
@@ -34,7 +39,7 @@ Rails.application.routes.draw do
   Rails.application.routes.draw do
   get "chats/index"
   get "chats/create"
-    resources :rooms, only: [:show] do
+    resources :rooms, only: [ :show ] do
       member do
         get "join"  # Pour la fonction de récupération des informations de la salle
         post "submit_join_form"  # Pour soumettre le formulaire

@@ -1,0 +1,13 @@
+<div>
+  <div class="font-semibold text-2xl">
+    <%= @user.name %>
+  <div class="font-sans text-xl">
+    <h1>Week</h1>
+    <%= line_chart SpotifyDatum.where("ts >= ?", Date.new(2018, 1, 1)).group_by_week(:ts).count %>
+  </div>
+  <div class="font-sans text-xl">
+    <h1>Month</h1>
+    <%= line_chart SpotifyDatum.where("ts >= ?", Date.new(2018, 1, 1)).group_by_month(:ts).count %>
+  </div>
+  
+</div>

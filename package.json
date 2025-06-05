@@ -34,6 +34,8 @@
     "babel-loader": "^8.4.1",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "chart.js": "^4.4.9",
+    "chartkick": "^5.0.1",
     "compression-webpack-plugin": "^9.2.0",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",

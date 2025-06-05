@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_25_094803) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_05_080901) do
   create_table "chats", force: :cascade do |t|
     t.string "message"
     t.datetime "created_at", null: false
@@ -73,6 +73,42 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_094803) do
     t.index ["slot_type_id"], name: "index_slots_on_slot_type_id"
   end
 
+  create_table "spotify_data", force: :cascade do |t|
+    t.string "platform"
+    t.integer "ms_played"
+    t.string "conn_country"
+    t.string "ip_addr"
+    t.string "master_metadata_track_name"
+    t.string "master_metadata_album_artist_name"
+    t.string "master_metadata_album_album_name"
+    t.string "spotify_track_uri"
+    t.string "episode_name"
+    t.string "episode_show_name"
+    t.string "spotify_episode_uri"
+    t.string "audiobook_title"
+    t.string "audiobook_uri"
+    t.string "audiobook_chapter_uri"
+    t.string "audiobook_chapter_title"
+    t.string "reason_start"
+    t.string "reason_end"
+    t.boolean "shuffle"
+    t.boolean "skipped"
+    t.boolean "offline"
+    t.string "offline_timestamp"
+    t.boolean "incognito_mode"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "ts"
+    t.integer "spotify_user_id", null: false
+    t.index ["spotify_user_id"], name: "index_spotify_data_on_spotify_user_id"
+  end
+
+  create_table "spotify_users", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "user_instruments", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "instrument_id", null: false
@@ -115,6 +151,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_094803) do
   add_foreign_key "slots", "rooms"
   add_foreign_key "slots", "rooms", on_delete: :cascade
   add_foreign_key "slots", "slot_types"
+  add_foreign_key "spotify_data", "spotify_users"
   add_foreign_key "user_instruments", "instruments"
   add_foreign_key "user_instruments", "slots", on_delete: :cascade
   add_foreign_key "user_instruments", "users"

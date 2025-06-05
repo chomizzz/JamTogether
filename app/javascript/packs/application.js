@@ -25,7 +25,7 @@ import Draggable from "../components/Draggable";
 import Droppable from "../components/Droppable";
 import DraggableResizable from "../components/DraggableResizable";
 import "./remove_error";
-
+import "chartkick/chart.js"
 
 ReactOnRails.register({ FirstComponent, JoinRoom, Play, Parameters, PianoRoll, Sheet, Draggable, Droppable, DraggableResizable });
 
